@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowLeft, BadgeCheck, FileText, Activity, Heart, Share2, Calendar } from "lucide-react";
 import PromptCard from "@/components/PromptCard";
 import { getPromptmastersSync } from "@/lib/data";
+import fs from "fs";
+import path from "path";
 
 interface PageProps {
   params: Promise<{ username: string }>;
@@ -20,24 +22,28 @@ export default async function PromptmasterProfilePage({ params }: PageProps) {
     notFound();
   }
 
-  // --- LOGIKA FETCH PROMPT YANG DIPERBAIKI ---
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  // --- LOGIKA LOAD PROMPT DENGAN FILESYSTEM ---
   let allPrompts: any[] = [];
   
   try {
-    // Menarik data dari prompts.json dan all_prompts.json sekaligus
-    const [promptsRes, allPromptsRes] = await Promise.all([
-      fetch(`${baseUrl}/data/prompts.json`, { cache: "no-store" }).catch(() => null),
-      fetch(`${baseUrl}/data/all_prompts.json`, { cache: "no-store" }).catch(() => null)
-    ]);
-
-    const promptsData = promptsRes?.ok ? await promptsRes.json() : [];
-    const allPromptsData = allPromptsRes?.ok ? await allPromptsRes.json() : [];
+    // Load data directly from filesystem (more reliable for server components)
+    const promptsPath = path.join(process.cwd(), "public/data/prompts.json");
+    const allPromptsPath = path.join(process.cwd(), "public/data/all_prompts.json");
     
-    // Gabungkan array-nya
-    allPrompts = [...promptsData, ...allPromptsData];
+    if (fs.existsSync(promptsPath)) {
+      const promptsData = fs.readFileSync(promptsPath, "utf-8");
+      const prompts = JSON.parse(promptsData);
+      allPrompts = Array.isArray(prompts) ? prompts : (prompts as any).prompts || [];
+    }
+    
+    if (fs.existsSync(allPromptsPath)) {
+      const allPromptsData = fs.readFileSync(allPromptsPath, "utf-8");
+      const additionalPrompts = JSON.parse(allPromptsData);
+      const additionalArray = Array.isArray(additionalPrompts) ? additionalPrompts : (additionalPrompts as any).prompts || [];
+      allPrompts = [...allPrompts, ...additionalArray];
+    }
   } catch (error) {
-    console.error("Error fetching prompts:", error);
+    console.error("Error loading prompt data:", error);
   }
 
   // Ubah semua target ID ke String agar aman saat dicocokkan
