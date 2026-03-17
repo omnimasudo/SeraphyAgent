@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { 
   ArrowLeft, Copy, Check, User, Tag, Info, Loader2, 
-  Code, Activity, Hash, ChevronDown, Bot, Sparkles, BrainCircuit 
+  Code, Activity, Hash, ChevronDown, Bot, Sparkles, BrainCircuit, Type, ShieldAlert
 } from "lucide-react";
 
 export default function PromptDetailPage() {
@@ -15,7 +15,6 @@ export default function PromptDetailPage() {
   const [prompt, setPrompt] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   
-  // States for Dropdown Button
   const [copied, setCopied] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -58,143 +57,197 @@ export default function PromptDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
-        <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
+      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-[#0B1115]">
+        <Loader2 className="w-10 h-10 animate-spin text-cyan-500" />
       </div>
     );
   }
 
   if (!prompt) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-950 text-center px-4">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 dark:bg-[#0B1115] text-center px-4">
         <h1 className="text-4xl font-bold mb-4 text-zinc-900 dark:text-white">Prompt Not Found</h1>
-        <button onClick={() => router.back()} className="px-6 py-3 bg-zinc-900 text-white rounded-xl">Go Back</button>
+        <button onClick={() => router.back()} className="px-6 py-3 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-xl font-bold">Go Back</button>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-24 pb-20 text-zinc-900 dark:text-zinc-100">
-      <div className="container mx-auto px-4 max-w-4xl">
-        
-        {/* Breadcrumb */}
-        <button onClick={() => router.back()} className="group inline-flex items-center gap-2 text-sm font-medium text-zinc-500 mb-8 hover:text-zinc-900 dark:hover:text-white transition-colors">
-          <div className="p-1.5 rounded-lg bg-zinc-200/50 dark:bg-zinc-800 group-hover:bg-zinc-200 transition-colors"><ArrowLeft className="w-4 h-4" /></div>
-          Back to Prompts
-        </button>
-
-        {/* Headers & Meta */}
-        <div className="mb-10">
-          <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
-              <Tag className="w-3 h-3" /> {prompt.category || "General"}
-            </span>
-            {prompt.for_devs && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400">
-                <Code className="w-3 h-3" /> For Devs
-              </span>
-            )}
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-lg bg-zinc-200/50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
-              <User className="w-3 h-3" /> 
-              {prompt.contributors?.[0] || "Community"}
-            </span>
-          </div>
+    <main className="min-h-screen bg-zinc-50 dark:bg-[#0B1115] pb-20 text-zinc-900 dark:text-zinc-100 selection:bg-cyan-200 dark:selection:bg-cyan-900/50">
+      
+      {/* =========================================
+          1. HERO IMAGE BANNER (If image exists)
+          ========================================= */}
+      {prompt.image ? (
+        <div className="relative w-full h-[40vh] md:h-[50vh] xl:h-[60vh] overflow-hidden flex items-end">
+          <img 
+            src={prompt.image} 
+            alt={prompt.title} 
+            className="absolute inset-0 w-full h-full object-cover z-0"
+          />
+          {/* Gradient overlay for blending into content */}
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-50 via-zinc-50/50 to-transparent dark:from-[#0B1115] dark:via-[#0B1115]/60 dark:to-transparent z-10"></div>
           
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 leading-tight">
-            {prompt.title}
-          </h1>
-
-          {/* Tags */}
-          {prompt.tags && prompt.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {prompt.tags.map((tag: string) => (
-                <span key={tag} className="text-sm font-medium px-3 py-1 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 rounded-full shadow-sm">
-                  #{tag}
+          <div className="container relative mx-auto px-4 max-w-4xl z-20 pb-10">
+             <button onClick={() => router.back()} className="group inline-flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-300 mb-6 hover:text-zinc-900 dark:hover:text-white transition-colors bg-white/50 dark:bg-black/30 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+                <ArrowLeft className="w-4 h-4" /> Back to Prompts
+             </button>
+             <div className="flex flex-wrap items-center gap-2 mb-4">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-lg bg-cyan-500 text-[#0B1115] shadow-lg shadow-cyan-500/20">
+                  <Tag className="w-3 h-3" /> {prompt.category || "General"}
                 </span>
-              ))}
+                {prompt.for_devs && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase rounded-lg bg-teal-500 text-[#0B1115] shadow-lg shadow-teal-500/20">
+                    <Code className="w-3 h-3" /> For Devs
+                  </span>
+                )}
+             </div>
+             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-tight drop-shadow-md">
+                {prompt.title}
+             </h1>
+          </div>
+        </div>
+      ) : (
+        // Non-Image Header
+        <div className="container mx-auto px-4 max-w-4xl pt-32 pb-10 relative">
+          <div className="absolute top-10 right-0 w-96 h-96 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none z-0"></div>
+          <div className="relative z-10">
+            <button onClick={() => router.back()} className="group inline-flex items-center gap-2 text-sm font-medium text-zinc-500 mb-8 hover:text-zinc-900 dark:hover:text-white transition-colors">
+              <div className="p-1.5 rounded-lg bg-zinc-200/50 dark:bg-white/5 group-hover:bg-zinc-200 dark:group-hover:bg-white/10 transition-colors border border-transparent dark:border-white/10"><ArrowLeft className="w-4 h-4" /></div>
+              Back to Prompts
+            </button>
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-lg bg-cyan-100 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 border border-transparent dark:border-cyan-500/30">
+                <Tag className="w-3 h-3" /> {prompt.category || "General"}
+              </span>
+              {prompt.for_devs && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase rounded-lg bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-400 border border-transparent dark:border-teal-500/30">
+                  <Code className="w-3 h-3" /> For Devs
+                </span>
+              )}
             </div>
-          )}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-6 leading-tight">
+              {prompt.title}
+            </h1>
+          </div>
+        </div>
+      )}
 
-          {/* Meta Stats Data */}
-          <div className="flex items-center gap-6 text-sm text-zinc-500 dark:text-zinc-400 font-medium">
-            <div className="flex items-center gap-2"><Activity className="w-4 h-4" /> Type: {prompt.type}</div>
-            {prompt.word_count && <div className="flex items-center gap-2"><Hash className="w-4 h-4" /> {prompt.word_count} Words</div>}
-            {prompt.char_count && <div className="flex items-center gap-2"><Hash className="w-4 h-4" /> {prompt.char_count} Chars</div>}
+      {/* =========================================
+          2. METADATA STATS GRID
+          ========================================= */}
+      <div className="container mx-auto px-4 max-w-4xl relative z-20 mt-4 md:-mt-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 p-4 md:p-6 bg-white/80 dark:bg-[#0f171e]/80 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-[1.5rem] shadow-xl dark:shadow-cyan-900/5">
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] uppercase font-bold text-zinc-400 dark:text-zinc-500 flex items-center gap-1"><User className="w-3 h-3" /> Creator</span>
+            <span className="font-semibold text-sm md:text-base">{prompt.contributors?.[0] || "Community"}</span>
+          </div>
+          <div className="flex flex-col gap-1 border-l border-zinc-200 dark:border-white/10 pl-3 md:pl-4">
+            <span className="text-[10px] uppercase font-bold text-zinc-400 dark:text-zinc-500 flex items-center gap-1"><Type className="w-3 h-3" /> Format</span>
+            <span className="font-semibold text-sm md:text-base">{prompt.type || "TEXT"}</span>
+          </div>
+          <div className="flex flex-col gap-1 border-t md:border-t-0 md:border-l border-zinc-200 dark:border-white/10 pt-3 md:pt-0 pl-0 md:pl-4 mt-3 md:mt-0">
+            <span className="text-[10px] uppercase font-bold text-zinc-400 dark:text-zinc-500 flex items-center gap-1"><Activity className="w-3 h-3" /> Words</span>
+            <span className="font-semibold text-sm md:text-base">{prompt.word_count || "N/A"}</span>
+          </div>
+          <div className="flex flex-col gap-1 border-t md:border-t-0 border-l border-zinc-200 dark:border-white/10 pt-3 md:pt-0 pl-3 md:pl-4 mt-3 md:mt-0">
+            <span className="text-[10px] uppercase font-bold text-zinc-400 dark:text-zinc-500 flex items-center gap-1"><Hash className="w-3 h-3" /> Characters</span>
+            <span className="font-semibold text-sm md:text-base">{prompt.char_count || "N/A"}</span>
           </div>
         </div>
 
-        {/* Code Block Area */}
-        <div className="relative mb-10 group">
-          <div className="flex items-center justify-between px-5 py-3 bg-zinc-900 border border-zinc-800 rounded-t-2xl">
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+        {/* Tags */}
+        {prompt.tags && prompt.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-6">
+            {prompt.tags.map((tag: string) => (
+              <span key={tag} className="text-xs font-semibold px-3 py-1.5 bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/10 rounded-full shadow-sm hover:border-cyan-500/50 hover:text-cyan-500 transition-colors cursor-default">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* =========================================
+          3. CODE BLOCK (THE PROMPT ITSELF)
+          ========================================= */}
+      <div className="container mx-auto px-4 max-w-4xl relative z-20">
+        <div className="relative mb-12 group">
+          {/* Mac Terminal Header Style */}
+          <div className="flex items-center justify-between px-5 py-3.5 bg-zinc-100 dark:bg-[#121b22] border border-zinc-200 dark:border-white/10 rounded-t-2xl">
+            <div className="flex gap-2.5">
+              <div className="w-3 h-3 rounded-full bg-red-500 shadow-inner"></div>
+              <div className="w-3 h-3 rounded-full bg-amber-500 shadow-inner"></div>
+              <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-inner"></div>
             </div>
-            <span className="text-xs font-medium text-zinc-400">Prompt Content</span>
+            <span className="text-xs font-bold text-zinc-500 dark:text-zinc-500 tracking-wider">prompt.txt</span>
           </div>
 
-          <div className="relative bg-[#0d1117] border-x border-b border-zinc-800 rounded-b-2xl p-6 md:p-8">
-            <pre className="whitespace-pre-wrap font-mono text-[15px] text-zinc-300 leading-relaxed selection:bg-blue-500/30">
+          {/* Code Content */}
+          <div className="relative bg-white dark:bg-[#070b0e] border-x border-b border-zinc-200 dark:border-white/10 rounded-b-2xl p-6 md:p-10 shadow-lg">
+            <pre className="whitespace-pre-wrap font-mono text-[15px] md:text-base text-zinc-800 dark:text-zinc-300 leading-relaxed">
               {prompt.content}
             </pre>
           </div>
 
-          {/* Shadcn-like Big Dropdown Button */}
-          <div className="absolute -bottom-6 right-8" ref={dropdownRef}>
-            <div className="flex shadow-2xl rounded-xl overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+          {/* Floating Copy & Run Button */}
+          <div className="absolute -bottom-6 right-6 md:right-10" ref={dropdownRef}>
+            <div className="flex shadow-2xl shadow-cyan-500/20 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform duration-300 ring-1 ring-white/20">
               
               <button
                 onClick={() => handleCopyAndRun()}
-                className={`flex items-center gap-2 px-6 py-3.5 font-bold transition-colors ${
-                  copied ? "bg-emerald-500 text-white" : "bg-blue-600 hover:bg-blue-500 text-white"
+                className={`flex items-center gap-2 px-6 py-3.5 font-extrabold transition-colors ${
+                  copied ? "bg-emerald-500 text-white" : "bg-cyan-500 hover:bg-cyan-400 text-[#0B1115]"
                 }`}
               >
                 {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                 {copied ? "Copied!" : "Copy Prompt"}
               </button>
               
-              <div className="w-[1px] bg-blue-700 dark:bg-blue-800"></div>
+              <div className="w-[1px] bg-black/10 dark:bg-white/20"></div>
               
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="px-3 py-3.5 bg-blue-600 hover:bg-blue-500 text-white transition-colors"
+                className="px-3 py-3.5 bg-cyan-500 hover:bg-cyan-400 text-[#0B1115] transition-colors"
               >
                 <ChevronDown className="w-5 h-5" />
               </button>
 
             </div>
 
-            {/* Dropdown Content */}
+            {/* Shadcn-like Dropdown */}
             {isDropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200 p-1.5">
+              <div className="absolute right-0 top-full mt-3 w-56 bg-white dark:bg-[#121b22] border border-zinc-200 dark:border-white/10 rounded-xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200 p-1.5">
                 <div className="px-3 py-2 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">
-                  Copy & Run in AI
+                  Run Prompt Directly
                 </div>
-                <button onClick={() => handleCopyAndRun("https://chatgpt.com/")} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+                <button onClick={() => handleCopyAndRun("https://chatgpt.com/")} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-bold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/5 rounded-lg transition-colors">
                   <Bot className="w-5 h-5 text-emerald-500" /> Open in ChatGPT
                 </button>
-                <button onClick={() => handleCopyAndRun("https://claude.ai/new")} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+                <button onClick={() => handleCopyAndRun("https://claude.ai/new")} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-bold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/5 rounded-lg transition-colors">
                   <BrainCircuit className="w-5 h-5 text-amber-500" /> Open in Claude
                 </button>
-                <button onClick={() => handleCopyAndRun("https://gemini.google.com/app")} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors">
-                  <Sparkles className="w-5 h-5 text-blue-500" /> Open in Gemini
+                <button onClick={() => handleCopyAndRun("https://gemini.google.com/app")} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-bold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+                  <Sparkles className="w-5 h-5 text-blue-400" /> Open in Gemini
                 </button>
               </div>
             )}
           </div>
         </div>
 
-        {/* Instructions */}
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 mt-20 shadow-sm">
-          <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-            <Info className="w-5 h-5 text-blue-500" /> How to use this prompt
+        {/* =========================================
+            4. USAGE INSTRUCTIONS
+            ========================================= */}
+        <div className="bg-white dark:bg-[#121b22]/50 border border-zinc-200 dark:border-white/5 rounded-3xl p-8 mt-24 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 blur-[50px] rounded-full pointer-events-none"></div>
+          <h3 className="text-xl font-extrabold mb-4 flex items-center gap-2 text-zinc-900 dark:text-white relative z-10">
+            <ShieldAlert className="w-5 h-5 text-cyan-500" /> How to execute
           </h3>
-          <ul className="list-disc list-inside space-y-2 text-zinc-600 dark:text-zinc-400 ml-2">
-            <li>Gunakan panah di samping tombol Copy untuk langsung membuka <strong>ChatGPT, Claude, atau Gemini</strong>.</li>
-            <li>Teks prompt akan <strong>otomatis tersalin (copied)</strong> ke clipboard Anda.</li>
-            <li>Paste (Ctrl+V / Cmd+V) langsung di kolom chat AI pilihan Anda.</li>
-            {prompt.variables?.length > 0 && <li>Ganti variabel teks sesuai kebutuhan proyek Anda.</li>}
+          <ul className="list-disc list-inside space-y-3 text-zinc-600 dark:text-zinc-400 ml-2 text-sm md:text-base relative z-10 font-medium">
+            <li>Click the arrow next to the Copy button to directly launch <strong>ChatGPT, Claude, or Gemini</strong>.</li>
+            <li>The prompt text is <strong>automatically copied</strong> to your clipboard.</li>
+            <li>Paste <kbd className="px-1.5 py-0.5 bg-zinc-100 dark:bg-white/10 rounded-md font-mono text-xs text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-white/20">Ctrl/Cmd + V</kbd> into the AI's input field.</li>
+            <li>If the prompt contains <code>[bracketed variables]</code>, be sure to replace them with your specific data before pressing Enter.</li>
           </ul>
         </div>
 

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { 
   Copy, Check, Terminal, FileText, ChevronDown, 
-  Bot, Sparkles, BrainCircuit, Code, Users
+  Bot, Sparkles, BrainCircuit, Code, Image as ImageIcon
 } from "lucide-react";
 
 interface PromptProps {
@@ -21,6 +21,7 @@ interface PromptProps {
     word_count?: number;
     char_count?: number;
     description?: string;
+    image?: string; // Key image baru
   }
 }
 
@@ -29,7 +30,6 @@ export default function PromptCard({ prompt }: PromptProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -61,112 +61,142 @@ export default function PromptCard({ prompt }: PromptProps) {
     return <FileText className="w-3 h-3" />;
   };
 
-  // Ambil author pertama jika ada
   const authorName = prompt.contributors && prompt.contributors.length > 0 
     ? prompt.contributors[0] 
     : "Community";
 
   return (
-    <div className="group flex flex-col h-full bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:shadow-xl hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all duration-300">
+    <div className="group flex flex-col h-full bg-white dark:bg-[#0B1115]/60 border border-zinc-200 dark:border-white/10 rounded-2xl shadow-sm hover:shadow-2xl dark:hover:shadow-cyan-900/20 hover:border-cyan-500/50 dark:hover:border-cyan-500/50 backdrop-blur-sm transition-all duration-300 overflow-hidden relative">
       
-      {/* 1. Kategori & Badges Area */}
-      <div className="p-5 pb-3">
-        <div className="flex justify-between items-start gap-2 mb-3">
-          <div className="flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300">
+      {/* Highlight Glow saat Hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+
+      {/* 1. Thumbnail Image Area (Conditional) */}
+      {prompt.image && (
+        <div className="relative w-full aspect-video md:h-44 overflow-hidden border-b border-zinc-100 dark:border-white/5 bg-zinc-100 dark:bg-zinc-900 flex-shrink-0">
+          <img 
+            src={prompt.image} 
+            alt={prompt.title} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+          {/* Overlay Gradient bawah gambar */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+          {/* Badge Kategori mengambang di atas gambar jika ada gambar */}
+          <div className="absolute bottom-3 left-3 flex gap-2">
+            <span className="inline-flex items-center gap-1.5 px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-black/50 text-white backdrop-blur-md border border-white/20">
               {getIcon(prompt.category || "")}
               {prompt.category || "General"}
             </span>
-            {prompt.for_devs && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800/50">
-                <Code className="w-3 h-3" /> Devs
-              </span>
-            )}
           </div>
         </div>
+      )}
 
-        {/* 2. Judul & Konten (Klik untuk ke detail) */}
-        <Link href={`/prompts/${prompt.slug || prompt.id}`} className="block group/link">
-          <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-2 leading-snug group-hover/link:text-blue-600 transition-colors line-clamp-2">
+      {/* 2. Content Area */}
+      <div className="p-5 pb-3 flex-grow flex flex-col z-10">
+        {/* Render Badges disini jika TIDAK ada gambar */}
+        {!prompt.image && (
+          <div className="flex justify-between items-start gap-2 mb-3">
+            <div className="flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-300 border border-transparent dark:border-white/10">
+                {getIcon(prompt.category || "")}
+                {prompt.category || "General"}
+              </span>
+              {prompt.for_devs && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 border border-cyan-100 dark:border-cyan-800/30">
+                  <Code className="w-3 h-3" /> Devs
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Jika ada gambar, badge For Devs pindah ke atas judul */}
+        {prompt.image && prompt.for_devs && (
+          <div className="mb-2">
+             <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 border border-cyan-100 dark:border-cyan-800/30">
+                <Code className="w-3 h-3" /> For Devs
+              </span>
+          </div>
+        )}
+
+        {/* Judul & Deskripsi */}
+        <Link href={`/prompts/${prompt.slug || prompt.id}`} className="block group/link flex-grow">
+          <h3 className="text-lg font-extrabold text-zinc-900 dark:text-zinc-100 mb-2 leading-snug group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 transition-colors line-clamp-2">
             {prompt.title}
           </h3>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3 leading-relaxed mb-4">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 line-clamp-2 md:line-clamp-3 leading-relaxed mb-4">
             {prompt.description || prompt.content}
           </p>
         </Link>
 
-        {/* 3. Tags (Max 3) */}
+        {/* Tags */}
         {prompt.tags && prompt.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-2">
+          <div className="flex flex-wrap gap-1.5 mt-auto">
             {prompt.tags.slice(0, 3).map(tag => (
-              <span key={tag} className="text-[11px] font-medium px-2 py-0.5 bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 rounded-full border border-zinc-100 dark:border-zinc-800">
+              <span key={tag} className="text-[10px] font-semibold px-2 py-0.5 bg-zinc-50 dark:bg-white/5 text-zinc-500 dark:text-zinc-400 rounded-full border border-zinc-200 dark:border-white/10">
                 #{tag}
               </span>
             ))}
             {prompt.tags.length > 3 && (
-              <span className="text-[11px] font-medium px-2 py-0.5 text-zinc-400">+{prompt.tags.length - 3}</span>
+              <span className="text-[10px] font-medium px-1 text-zinc-400">+{prompt.tags.length - 3}</span>
             )}
           </div>
         )}
       </div>
 
-      {/* 4. Footer (Author, Stats, Dropdown Action) */}
-      <div className="mt-auto p-5 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/20 rounded-b-2xl">
+      {/* 3. Footer Action */}
+      <div className="p-4 border-t border-zinc-100 dark:border-white/5 flex items-center justify-between bg-zinc-50/50 dark:bg-[#070b0e]/50 z-10">
         
         {/* Kontributor */}
-        <div className="flex items-center gap-2 text-xs font-medium text-zinc-500">
-          <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 text-white flex items-center justify-center text-[10px] font-bold shadow-inner">
+        <div className="flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+          <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-cyan-500 to-teal-400 text-[#0B1115] flex items-center justify-center text-[10px] font-bold shadow-inner">
             {authorName.charAt(0).toUpperCase()}
           </div>
           <span className="truncate max-w-[80px]" title={authorName}>{authorName}</span>
         </div>
 
-        {/* Action Button: Shadcn Dropdown Style */}
+        {/* Dropdown Action Shadcn-style */}
         <div className="relative" ref={dropdownRef}>
           <div className="flex items-center">
-            {/* Tombol Copy Utama */}
             <button
               onClick={(e) => handleCopy(e)}
               className={`flex items-center gap-1.5 pl-3 pr-2 py-1.5 text-xs font-bold rounded-l-lg border border-r-0 transition-colors ${
                 copied 
                 ? "bg-emerald-500 border-emerald-500 text-white" 
-                : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                : "bg-white dark:bg-white/5 border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/10"
               }`}
             >
               {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
               {copied ? "Copied" : "Copy"}
             </button>
-            
-            {/* Tombol Panah Dropdown */}
             <button
               onClick={(e) => { e.preventDefault(); setIsDropdownOpen(!isDropdownOpen); }}
-              className="flex items-center px-1.5 py-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-r-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              className="flex items-center px-1.5 py-1.5 bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-r-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
             >
               <ChevronDown className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Isi Dropdown Menu */}
           {isDropdownOpen && (
-            <div className="absolute right-0 bottom-full mb-2 w-48 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
-              <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
-                Copy & Run in...
+            <div className="absolute right-0 bottom-full mb-2 w-48 bg-white dark:bg-[#0B1115] border border-zinc-200 dark:border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+              <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/5">
+                Run in AI
               </div>
               <div className="p-1 flex flex-col gap-0.5">
-                <button onClick={(e) => handleCopy(e, "https://chatgpt.com/")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors">
+                <button onClick={(e) => handleCopy(e, "https://chatgpt.com/")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5 rounded-md transition-colors">
                   <Bot className="w-4 h-4 text-emerald-500" /> ChatGPT
                 </button>
-                <button onClick={(e) => handleCopy(e, "https://claude.ai/new")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors">
-                  <BrainCircuit className="w-4 h-4 text-amber-600" /> Claude
+                <button onClick={(e) => handleCopy(e, "https://claude.ai/new")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5 rounded-md transition-colors">
+                  <BrainCircuit className="w-4 h-4 text-amber-500" /> Claude
                 </button>
-                <button onClick={(e) => handleCopy(e, "https://gemini.google.com/app")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors">
-                  <Sparkles className="w-4 h-4 text-blue-500" /> Gemini
+                <button onClick={(e) => handleCopy(e, "https://gemini.google.com/app")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5 rounded-md transition-colors">
+                  <Sparkles className="w-4 h-4 text-blue-400" /> Gemini
                 </button>
               </div>
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

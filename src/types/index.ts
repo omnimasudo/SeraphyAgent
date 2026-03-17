@@ -11,6 +11,7 @@ export interface Prompt {
   contributors: string[];
   word_count: number;
   char_count: number;
+  image?: string;
 }
 
 export interface Skill {
