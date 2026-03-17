@@ -303,27 +303,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-                Become a Promptmaster. Share your private collection with the world and shape how we interact with artificial intelligence.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link 
-                  href="/prompts/new" 
-                  className="px-8 py-4 bg-cyan-500 text-[#0B1115] font-extrabold rounded-2xl hover:bg-cyan-400 transition-colors flex items-center gap-2 shadow-lg shadow-cyan-500/25"
-                >
-                  Contribute Now <ArrowRight className="w-5 h-5" />
-                </Link>
-                <Link 
-                  href="/promptmasters" 
-                  className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl transition-colors border border-white/10 flex items-center gap-2 backdrop-blur-sm"
-                >
-                  <Users className="w-5 h-5" /> View Creators
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
     </main>
   );
