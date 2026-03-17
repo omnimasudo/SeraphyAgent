@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import Link from "next/link";
 import { ArrowRight, Sparkles, Terminal, Users, Search, Bot, ShieldCheck, Plus } from "lucide-react";
 import PromptCard from "@/components/PromptCard";
@@ -12,6 +14,7 @@ interface Prompt {
   for_devs?: boolean;
   tags?: string[];
   contributors?: string[];
+  image?: string;
 }
 
 export default async function HomePage() {
@@ -19,20 +22,28 @@ export default async function HomePage() {
   let categories = [];
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const [promptsRes, categoriesRes] = await Promise.all([
-      fetch(`${baseUrl}/data/prompts.json`, { cache: "no-store" }).catch(() => null),
-      fetch(`${baseUrl}/data/categories.json`, { cache: "no-store" }).catch(() => null)
-    ]);
-
-    if (promptsRes?.ok) prompts = await promptsRes.json();
-    if (categoriesRes?.ok) categories = await categoriesRes.json();
+    // Read directly from filesystem which is more reliable for server components
+    const promptsPath = path.join(process.cwd(), "public/data/prompts.json");
+    const categoriesPath = path.join(process.cwd(), "public/data/categories.json");
+    
+    if (fs.existsSync(promptsPath)) {
+      const promptsData = fs.readFileSync(promptsPath, "utf-8");
+      prompts = JSON.parse(promptsData);
+    }
+    
+    if (fs.existsSync(categoriesPath)) {
+      const categoriesData = fs.readFileSync(categoriesPath, "utf-8");
+      categories = JSON.parse(categoriesData);
+    }
   } catch (error) {
     console.error("Error loading static data:", error);
   }
 
-  const featuredPrompts = prompts.slice(0, 6);
-  const displayCategories = categories.length > 0 ? categories.slice(0, 5) : [
+  // Handle both array and object format { prompts: [...] }
+  const promptsArray = Array.isArray(prompts) ? prompts : (prompts as any).prompts || [];
+  const featuredPrompts = promptsArray.slice(0, 6);
+  
+  const displayCategories = Array.isArray(categories) ? (categories as any[]).slice(0, 5) : [
     { id: "1", slug: "development", name: "Development" },
     { id: "2", slug: "writing", name: "Writing" },
     { id: "3", slug: "marketing", name: "Marketing" },
@@ -165,7 +176,7 @@ export default async function HomePage() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {featuredPrompts.map((prompt: any) => (
               <PromptCard key={prompt.id} prompt={prompt} />
             ))}
@@ -273,12 +284,6 @@ export default async function HomePage() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link 
-              href="/prompts/new" 
-              className="px-8 py-4 bg-zinc-900 text-white font-bold text-lg rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
-            >
-              <Plus className="w-5 h-5" /> Submit a Prompt
-            </Link>
-            <Link 
               href="/prompts" 
               className="px-8 py-4 bg-white border border-zinc-200 text-zinc-900 font-bold text-lg rounded-2xl hover:bg-zinc-50 transition-all flex items-center gap-2"
             >
@@ -286,13 +291,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-16 flex items-center justify-center gap-8 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-             {/* Mock Logos for Social Proof (Optional) */}
-             <div className="h-8 w-24 bg-zinc-300 rounded-md"></div>
-             <div className="h-8 w-24 bg-zinc-300 rounded-md"></div>
-             <div className="h-8 w-24 bg-zinc-300 rounded-md"></div>
-             <div className="h-8 w-24 bg-zinc-300 rounded-md hidden sm:block"></div>
-          </div>
+        
         </div>
       </section>
 

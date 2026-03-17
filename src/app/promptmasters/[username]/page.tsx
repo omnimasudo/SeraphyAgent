@@ -120,7 +120,9 @@ export default async function PromptmasterProfilePage({ params }: PageProps) {
                 {username}
               </h1>
               {master.rank <= 10 && (
-                <BadgeCheck className="w-7 h-7 text-cyan-500 fill-cyan-500/20" title="Top 10 Contributor" />
+                <span title="Top 10 Contributor" className="inline-flex items-center">
+                  <BadgeCheck className="w-7 h-7 text-cyan-500 fill-cyan-500/20" />
+                </span>
               )}
             </div>
             <p className="text-zinc-500 text-base mb-5 font-medium">@{username}</p>

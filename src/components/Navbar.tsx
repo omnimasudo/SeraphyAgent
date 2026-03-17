@@ -76,12 +76,7 @@ export default function Navbar() {
 
         {/* Right Action Buttons */}
         <div className="hidden md:flex items-center gap-4">
-          <Link 
-            href="/prompts/new" 
-            className="flex items-center gap-1.5 px-5 py-2.5 bg-zinc-900 text-white text-sm font-extrabold rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
-          >
-            <Plus className="w-4 h-4" /> Submit
-          </Link>
+        
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -118,13 +113,7 @@ export default function Navbar() {
               );
             })}
             <hr className="my-2 border-zinc-100" />
-            <Link 
-              href="/prompts/new" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 px-4 py-3 bg-zinc-900 text-white text-base font-extrabold rounded-xl w-full shadow-lg"
-            >
-              <Plus className="w-5 h-5" /> Submit Prompt
-            </Link>
+            
           </div>
         </div>
       )}

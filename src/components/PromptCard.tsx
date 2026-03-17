@@ -30,6 +30,9 @@ export default function PromptCard({ prompt }: PromptProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Defensive check: if prompt is missing, don't render anything
+  if (!prompt) return null;
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -57,7 +60,9 @@ export default function PromptCard({ prompt }: PromptProps) {
   };
 
   const getIcon = (cat: string) => {
-    if (cat?.toLowerCase().includes("dev") || prompt.for_devs) return <Terminal className="w-3 h-3" />;
+    // Safer string check
+    const categoryLower = cat ? cat.toLowerCase() : "";
+    if (categoryLower.includes("dev") || prompt.for_devs) return <Terminal className="w-3 h-3" />;
     return <FileText className="w-3 h-3" />;
   };
 
