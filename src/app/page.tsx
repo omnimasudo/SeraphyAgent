@@ -158,7 +158,7 @@ export default async function HomePage() {
           3. TRENDING PROMPTS SECTION
           ========================================= */}
       <section className="w-full py-24 bg-white relative z-10">
-        <div className="container mx-auto px-4 max-w-7xl">
+        <div className="container mx-auto px-1 max-w-screen-xl">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
               <h2 className="text-3xl md:text-4xl font-extrabold mb-3 text-zinc-900 tracking-tight flex items-center gap-3">
@@ -176,7 +176,7 @@ export default async function HomePage() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredPrompts.map((prompt: any) => (
               <PromptCard key={prompt.id} prompt={prompt} />
             ))}
