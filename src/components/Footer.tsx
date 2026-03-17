@@ -40,38 +40,27 @@ export default function Footer() {
           </div>
 
           {/* Menu Platform */}
-          <div className="lg:col-span-3 lg:col-start-6">
+          <div className="lg:col-span-3">
             <h4 className="text-zinc-900 font-bold mb-6 tracking-wide">Platform</h4>
             <ul className="space-y-4 text-sm text-zinc-600 font-medium">
               <li><Link href="/prompts" className="hover:text-cyan-500 transition-colors">Explore Prompts</Link></li>
               <li><Link href="/skills" className="hover:text-cyan-500 transition-colors">AI Skills & Agents</Link></li>
               <li><Link href="/promptmasters" className="hover:text-cyan-500 transition-colors">Promptmasters</Link></li>
-              <li><Link href="/prompts?category=development" className="hover:text-cyan-500 transition-colors">For Developers <span className="ml-1.5 inline-block px-1.5 py-0.5 bg-teal-500/10 text-teal-500 text-[9px] rounded uppercase">Hot</span></Link></li>
             </ul>
           </div>
 
-          {/* Menu Resources & Legal */}
-          <div className="lg:col-span-2">
-            <h4 className="text-zinc-900 font-bold mb-6 tracking-wide">Resources</h4>
-            <ul className="space-y-4 text-sm text-zinc-600 font-medium">
-              <li><Link href="/about" className="hover:text-cyan-500 transition-colors">About Us</Link></li>
-              <li><Link href="/docs/api" className="hover:text-cyan-500 transition-colors">API Documentation</Link></li>
-              <li><Link href="/privacy" className="hover:text-cyan-500 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-cyan-500 transition-colors">Terms of Service</Link></li>
-            </ul>
-          </div>
 
           {/* Kolom Social Media / Komunitas */}
           <div className="lg:col-span-2">
             <h4 className="text-zinc-900 font-bold mb-6 tracking-wide">Community</h4>
             <div className="flex flex-col gap-4">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors group">
+              <a href="https://github.com/omnimasudo/SeraphyAgent" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors group">
                 <div className="p-2 rounded-lg bg-zinc-100 group-hover:bg-cyan-500/20 group-hover:text-cyan-400 transition-colors border border-transparent">
                   <Github className="w-4 h-4" />
                 </div>
                 GitHub
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors group">
+              <a href="https://x.com/seraphyagent" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors group">
                 <div className="p-2 rounded-lg bg-zinc-100 group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors border border-transparent">
                   <Twitter className="w-4 h-4" />
                 </div>

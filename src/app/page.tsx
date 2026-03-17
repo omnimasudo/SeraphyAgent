@@ -56,6 +56,8 @@ export default async function HomePage() {
     { name: "CommandCode", logo: "/commandCodeAI.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg" },
     { name: "Cognition", logo: "/Cognition_PrimaryLockup_Black.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg scale-125 origin-center" },
     { name: "CodeRabbit", logo: "/code-rabbit.png" },
+    { name: "Each Labs", logo: "/each-labs.jpg", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg" },
+    { name: "Wiro", logo: "/wiro.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg" },
   ];
 
   return (
@@ -144,12 +146,28 @@ export default async function HomePage() {
           <p className="text-center text-xs md:text-sm font-bold uppercase tracking-widest text-zinc-400 mb-8">
             Supported by the Community & Innovators
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-75 hover:opacity-100 transition-all duration-500">
-            {sponsors.map((sponsor) => (
-              <div key={sponsor.name} className={`relative h-12 w-32 md:w-40 flex items-center justify-center ${sponsor.className || ''}`}>
-                <img src={sponsor.logo} alt={sponsor.name} className="max-h-full max-w-full object-contain" />
-              </div>
-            ))}
+          <div className="overflow-hidden">
+            <div 
+              className="flex gap-8 md:gap-16 opacity-75 hover:opacity-100 transition-all duration-500"
+              style={{
+                animation: 'scroll-horizontal 30s linear infinite',
+              }}
+            >
+              <style dangerouslySetInnerHTML={{
+                __html: `
+                  @keyframes scroll-horizontal {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                  }
+                `
+              }} />
+              {/* Duplicate sponsors for seamless infinite scroll */}
+              {[...sponsors, ...sponsors].map((sponsor, index) => (
+                <div key={`${sponsor.name}-${index}`} className={`relative h-12 w-32 md:w-40 flex items-center justify-center flex-shrink-0 ${sponsor.className || ''}`}>
+                  <img src={sponsor.logo} alt={sponsor.name} className="max-h-full max-w-full object-contain" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

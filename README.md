@@ -2,6 +2,10 @@
 
 > **Next-Gen AI Prompt Library & Skill Marketplace**
 
+<div align="center">
+  <img src="public/logo.jpeg" alt="Seraphy Agent Logo" width="120" height="120" style="border-radius: 50%; border: 2px solid #00ffff;">
+</div>
+
 [![Status](https://img.shields.io/badge/Status-V1.0_BETA-cyan?style=for-the-badge)]()
 [![Core](https://img.shields.io/badge/Next.js-16.1.7-black?style=for-the-badge&logo=next.js)]()
 [![Model](https://img.shields.io/badge/AI_Engine-GPT--4o_Mini-blue?style=for-the-badge&logo=openai)]()
@@ -15,6 +19,12 @@ We don't just list prompts; we provide an interactive ecosystem where developers
 
 **Seraphy**, our resident AI guide, is always online—ready to help you navigate through thousands of prompts and skills with a friendly, anime-inspired personality.
 Powered by **OpenRouter** and **GPT-4o-mini**, Seraphy understands your context and suggests the perfect resources instantly.
+
+---
+
+## 🎨 Assets
+
+- **Logo**: `public/logo.jpeg` - The official Seraphy Agent mascot image
 
 ---
 
