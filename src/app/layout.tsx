@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 // Menggunakan font Inter untuk kesan bersih/clean
@@ -27,10 +28,8 @@ export default function RootLayout({
           {children}
         </div>
 
-        {/* Global Footer (Opsional, sangat disarankan untuk kesan profesional) */}
-        <footer className="py-8 text-center text-zinc-500 border-t border-zinc-200 dark:border-zinc-800 mt-auto bg-white dark:bg-zinc-950">
-          <p className="text-sm">© {new Date().getFullYear()} SeraphyAgent. Built with ❤️ for AI Enthusiasts.</p>
-        </footer>
+        {/* Global Footer (Revised) */}
+        <Footer />
       </body>
     </html>
   );

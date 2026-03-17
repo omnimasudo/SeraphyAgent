@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, Terminal, Users, Search, Bot, ShieldCheck } from "lucide-react";
+import { ArrowRight, Sparkles, Terminal, Users, Search, Bot, ShieldCheck, Plus } from "lucide-react";
 import PromptCard from "@/components/PromptCard";
 
 interface Prompt {
@@ -188,66 +188,121 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================
-          4. FEATURES SECTION
+          4. WHY US / BENEFITS SECTION
           ========================================= */}
-      <section className="w-full py-24 bg-white dark:bg-[#0B1115] border-y border-zinc-200/50 dark:border-white/5 relative z-10">
+      <section className="w-full py-32 bg-white dark:bg-[#0B1115] border-y border-zinc-200/50 dark:border-white/5 relative z-10">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-16 max-w-2xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight text-zinc-900 dark:text-white">
-              Why SeraphyAgent?
-            </h2>
-            <p className="text-zinc-600 dark:text-zinc-400 text-lg">
-              A minimalist, powerful toolset designed to bridge the gap between human intent and machine execution.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-[2rem] bg-zinc-50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5 hover:border-cyan-500/30 transition-colors group">
-              <div className="w-14 h-14 bg-cyan-100 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
-                <Terminal className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-zinc-900 dark:text-zinc-100">Frictionless Workflow</h3>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                One-click copy. Execute complex prompts instantly on your preferred AI models without breaking your focus.
-              </p>
-            </div>
+          <div className="flex flex-col md:flex-row gap-16 items-start">
             
-            <div className="p-8 rounded-[2rem] bg-zinc-50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5 hover:border-teal-500/30 transition-colors group">
-              <div className="w-14 h-14 bg-teal-100 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
-                <ShieldCheck className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-zinc-900 dark:text-zinc-100">Quality Assured</h3>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                Every prompt is community-vetted. We prioritize clarity, efficiency, and structural integrity over noise.
+            <div className="md:w-1/3 sticky top-32">
+              <span className="text-cyan-600 dark:text-cyan-400 font-bold uppercase tracking-widest text-xs mb-4 block">
+                The Seraphy Standard
+              </span>
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight text-zinc-900 dark:text-white leading-tight">
+                Not just prompts.<br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-500 to-zinc-800 dark:from-zinc-400 dark:to-zinc-600">
+                  Engineering.
+                </span>
+              </h2>
+              <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed">
+                We treat prompt engineering like software development. Versioned, tested, and optimized for maximum token efficiency.
               </p>
+              <Link href="/about" className="inline-flex items-center text-sm font-bold border-b border-zinc-900 dark:border-white pb-0.5 hover:text-cyan-500 hover:border-cyan-500 transition-all">
+                Read our philosophy <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
             </div>
 
-            <div className="p-8 rounded-[2rem] bg-zinc-50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5 hover:border-blue-500/30 transition-colors group">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
-                <Bot className="w-7 h-7" />
+            <div className="md:w-2/3 grid grid-cols-1 gap-8">
+              
+              <div className="flex gap-6 p-8 rounded-3xl bg-zinc-50/50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5 hover:border-cyan-500/20 transition-all group">
+                <div className="flex-shrink-0 w-12 h-12 bg-zinc-100 dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-200 dark:border-white/10 group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-500 transition-all shadow-sm">
+                  <Terminal className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">Zero-Shot Precision</h3>
+                  <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    Stop wrestling with hallucinations. Our prompts are structured to force the AI into a specific cognitive framework from the very first token.
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-3 text-zinc-900 dark:text-zinc-100">Advanced Agents</h3>
-              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                Unlock specialized AI Skills. Go beyond text generation and automate intricate, multi-step tasks.
-              </p>
+
+              <div className="flex gap-6 p-8 rounded-3xl bg-zinc-50/50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5 hover:border-cyan-500/20 transition-all group">
+                <div className="flex-shrink-0 w-12 h-12 bg-zinc-100 dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-200 dark:border-white/10 group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-500 transition-all shadow-sm">
+                   <ShieldCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">Model Agnostic</h3>
+                  <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    Whether you're running Llama 3 locally or using GPT-4o via API, our syntax is designed to be universally understood by LLM architectures.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-6 p-8 rounded-3xl bg-zinc-50/50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5 hover:border-cyan-500/20 transition-all group">
+                <div className="flex-shrink-0 w-12 h-12 bg-zinc-100 dark:bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-200 dark:border-white/10 group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-500 transition-all shadow-sm">
+                   <Bot className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">Agent-Ready Skills</h3>
+                  <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    Beyond simple Q&A. Use our "Skills" library to give your AI agent capabilities like code review, sentiment analysis, and data extraction.
+                  </p>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
       </section>
 
       {/* =========================================
-          5. CALL TO ACTION
+          5. COMMUNITY / CTA SECTION
           ========================================= */}
-      <section className="w-full py-32 bg-zinc-50/50 dark:bg-[#070b0e] relative z-10">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="bg-zinc-900 dark:bg-gradient-to-br dark:from-[#0f171e] dark:to-[#0B1115] border border-zinc-800 dark:border-white/10 rounded-[2.5rem] p-10 md:p-20 text-center text-white shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/20 blur-[80px] rounded-full pointer-events-none"></div>
-            
-            <div className="relative z-10">
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
-                Leave your mark.
-              </h2>
-              <p className="text-zinc-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-medium">
+      <section className="w-full py-32 bg-zinc-50/50 dark:bg-[#070b0e] relative z-10 overflow-hidden">
+        
+        {/* Decorative Background Elements */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div className="container mx-auto px-4 max-w-4xl relative z-10 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 text-xs font-bold uppercase tracking-wider rounded-full bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-500 dark:text-zinc-400">
+             <Users className="w-3.5 h-3.5" /> Join 2,000+ Prompt Engineers
+          </div>
+          
+          <h2 className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tighter text-zinc-900 dark:text-white leading-[0.9]">
+            Build the future,<br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">
+              one prompt at a time.
+            </span>
+          </h2>
+          
+          <p className="text-xl md:text-2xl text-zinc-600 dark:text-zinc-400 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+             Don't just consume AI. Master it. Share your best workflows and help others navigate the latent space.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link 
+              href="/prompts/new" 
+              className="px-8 py-4 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold text-lg rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+            >
+              <Plus className="w-5 h-5" /> Submit a Prompt
+            </Link>
+            <Link 
+              href="/prompts" 
+              className="px-8 py-4 bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-bold text-lg rounded-2xl hover:bg-zinc-50 dark:hover:bg-white/10 transition-all flex items-center gap-2"
+            >
+              Explore Collection
+            </Link>
+          </div>
+
+          <div className="mt-16 flex items-center justify-center gap-8 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+             {/* Mock Logos for Social Proof (Optional) */}
+             <div className="h-8 w-24 bg-zinc-300 dark:bg-zinc-800 rounded-md"></div>
+             <div className="h-8 w-24 bg-zinc-300 dark:bg-zinc-800 rounded-md"></div>
+             <div className="h-8 w-24 bg-zinc-300 dark:bg-zinc-800 rounded-md"></div>
+             <div className="h-8 w-24 bg-zinc-300 dark:bg-zinc-800 rounded-md hidden sm:block"></div>
+          </div>
+        </div>
+      </section>
                 Become a Promptmaster. Share your private collection with the world and shape how we interact with artificial intelligence.
               </p>
               
