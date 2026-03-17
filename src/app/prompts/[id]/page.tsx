@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  ArrowLeft, Copy, Check, User, Tag, Info, Loader2,
-  Code, Activity, Hash, ChevronDown, Bot, Sparkles, BrainCircuit, Type, ShieldAlert
+  ArrowLeft, Copy, Check, User, Tag, Loader2,
+  Code, Activity, Hash, ChevronDown, Bot, Sparkles, BrainCircuit, Type, ShieldAlert,
+  AlertCircle, X
 } from "lucide-react";
 
 export default function PromptDetailPage() {
@@ -17,14 +18,28 @@ export default function PromptDetailPage() {
 
   const [copied, setCopied] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  // State untuk modal peringatan Gemini
+  const [showGeminiWarning, setShowGeminiWarning] = useState(false);
+  
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchPrompt = async () => {
       try {
-        const res = await fetch("/data/prompts.json");
-        const data = res.ok ? await res.json() : [];
-        const found = data.find((p: any) => p.id.toString() === id || p.slug === id);
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        // Fetch dari kedua sumber seperti di halaman profil
+        const [promptsRes, allPromptsRes] = await Promise.all([
+          fetch(`${baseUrl}/data/prompts.json`).catch(() => null),
+          fetch(`${baseUrl}/data/all_prompts.json`).catch(() => null)
+        ]);
+
+        const promptsData = promptsRes?.ok ? await promptsRes.json() : [];
+        const allPromptsData = allPromptsRes?.ok ? await allPromptsRes.json() : [];
+        
+        const combinedPrompts = [...promptsData, ...allPromptsData];
+        const found = combinedPrompts.find((p: any) => p.id.toString() === id || p.slug === id);
+        
         setPrompt(found || null);
       } catch (error) {
         console.error("Failed to fetch:", error);
@@ -45,14 +60,40 @@ export default function PromptDetailPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleCopyAndRun = (redirectUrl?: string) => {
+  // Logika Copy Standar
+  const handleCopyOnly = () => {
     const textToCopy = prompt?.content || "";
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setIsDropdownOpen(false);
-
-    if (redirectUrl) window.open(redirectUrl, "_blank");
     setTimeout(() => setCopied(false), 2500);
+  };
+
+  // Logika Eksekusi Prompt berdasarkan Platform
+  const handleRunPrompt = (platform: "chatgpt" | "claude" | "gemini") => {
+    const textToCopy = prompt?.content || "";
+    
+    // Selalu copy ke clipboard sebagai backup
+    navigator.clipboard.writeText(textToCopy);
+    setCopied(true);
+    setIsDropdownOpen(false);
+    setTimeout(() => setCopied(false), 2500);
+
+    const encodedPrompt = encodeURIComponent(textToCopy);
+
+    if (platform === "chatgpt") {
+      window.open(`https://chatgpt.com/?q=${encodedPrompt}`, "_blank");
+    } else if (platform === "claude") {
+      window.open(`https://claude.ai/new?q=${encodedPrompt}`, "_blank");
+    } else if (platform === "gemini") {
+      // Tampilkan warning modal untuk Gemini, jangan langsung redirect
+      setShowGeminiWarning(true);
+    }
+  };
+
+  const proceedToGemini = () => {
+    setShowGeminiWarning(false);
+    window.open("https://gemini.google.com/app", "_blank");
   };
 
   if (isLoading) {
@@ -75,8 +116,49 @@ export default function PromptDetailPage() {
   return (
     <main className="min-h-screen bg-zinc-50 pb-20 text-zinc-900 selection:bg-cyan-200">
 
+      {/* --- MODAL WARNING GEMINI --- */}
+      {showGeminiWarning && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-900/40 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 fade-in duration-200 border border-zinc-200">
+            <div className="flex justify-between items-start mb-4">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center border border-blue-200">
+                <Sparkles className="w-6 h-6 text-blue-500" />
+              </div>
+              <button 
+                onClick={() => setShowGeminiWarning(false)}
+                className="p-2 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <h3 className="text-xl font-extrabold text-zinc-900 mb-2">Manual Paste Required</h3>
+            <p className="text-zinc-600 mb-6 font-medium leading-relaxed text-sm">
+              Google Gemini does not support auto-filling prompts via links yet. We have copied the prompt to your clipboard. 
+              <br/><br/>
+              Please use <kbd className="px-1.5 py-0.5 bg-zinc-100 border border-zinc-200 rounded text-xs font-mono text-zinc-800 shadow-sm mx-1">Ctrl/Cmd + V</kbd> to paste it into the chat box once Gemini opens.
+            </p>
+            
+            <div className="flex gap-3 w-full">
+              <button 
+                onClick={() => setShowGeminiWarning(false)}
+                className="flex-1 px-4 py-3 bg-white border border-zinc-200 text-zinc-700 font-bold rounded-xl hover:bg-zinc-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={proceedToGemini}
+                className="flex-1 px-4 py-3 bg-blue-500 text-white font-bold rounded-xl hover:bg-blue-600 shadow-md shadow-blue-500/20 transition-all hover:-translate-y-0.5"
+              >
+                Open Gemini
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* =========================================
-          1. HERO IMAGE BANNER (If image exists)
+          1. HERO SECTION
           ========================================= */}
       {prompt.image ? (
         <div className="relative w-full h-[40vh] md:h-[50vh] xl:h-[60vh] overflow-hidden flex items-end">
@@ -85,11 +167,10 @@ export default function PromptDetailPage() {
             alt={prompt.title}
             className="absolute inset-0 w-full h-full object-cover z-0"
           />
-          {/* Gradient overlay for blending into content */}
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-50 via-zinc-50/50 to-transparent z-10"></div>
 
           <div className="container relative mx-auto px-4 max-w-4xl z-20 pb-10">
-             <button onClick={() => router.back()} className="group inline-flex items-center gap-2 text-sm font-medium text-zinc-600 mb-6 hover:text-zinc-900 transition-colors bg-white/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+             <button onClick={() => router.back()} className="group inline-flex items-center gap-2 text-sm font-medium text-zinc-600 mb-6 hover:text-zinc-900 transition-colors bg-white/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
                 <ArrowLeft className="w-4 h-4" /> Back to Prompts
              </button>
              <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -108,12 +189,11 @@ export default function PromptDetailPage() {
           </div>
         </div>
       ) : (
-        // Non-Image Header
         <div className="container mx-auto px-4 max-w-4xl pt-32 pb-10 relative">
           <div className="absolute top-10 right-0 w-96 h-96 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none z-0"></div>
           <div className="relative z-10">
             <button onClick={() => router.back()} className="group inline-flex items-center gap-2 text-sm font-medium text-zinc-500 mb-8 hover:text-zinc-900 transition-colors">
-              <div className="p-1.5 rounded-lg bg-zinc-200/50 group-hover:bg-zinc-200 transition-colors border border-transparent"><ArrowLeft className="w-4 h-4" /></div>
+              <div className="p-1.5 rounded-lg bg-white border border-zinc-200 group-hover:bg-zinc-100 transition-colors shadow-sm"><ArrowLeft className="w-4 h-4" /></div>
               Back to Prompts
             </button>
             <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -140,27 +220,26 @@ export default function PromptDetailPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 p-4 md:p-6 bg-white backdrop-blur-xl border border-zinc-200 rounded-[1.5rem] shadow-xl">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] uppercase font-bold text-zinc-400 flex items-center gap-1"><User className="w-3 h-3" /> Creator</span>
-            <span className="font-semibold text-sm md:text-base">{prompt.contributors?.[0] || "Community"}</span>
+            <span className="font-semibold text-sm md:text-base text-zinc-800">{prompt.contributors?.[0] || "Community"}</span>
           </div>
           <div className="flex flex-col gap-1 border-l border-zinc-200 pl-3 md:pl-4">
             <span className="text-[10px] uppercase font-bold text-zinc-400 flex items-center gap-1"><Type className="w-3 h-3" /> Format</span>
-            <span className="font-semibold text-sm md:text-base">{prompt.type || "TEXT"}</span>
+            <span className="font-semibold text-sm md:text-base text-zinc-800">{prompt.type || "TEXT"}</span>
           </div>
           <div className="flex flex-col gap-1 border-t md:border-t-0 md:border-l border-zinc-200 pt-3 md:pt-0 pl-0 md:pl-4 mt-3 md:mt-0">
             <span className="text-[10px] uppercase font-bold text-zinc-400 flex items-center gap-1"><Activity className="w-3 h-3" /> Words</span>
-            <span className="font-semibold text-sm md:text-base">{prompt.word_count || "N/A"}</span>
+            <span className="font-semibold text-sm md:text-base text-zinc-800">{prompt.word_count || "N/A"}</span>
           </div>
           <div className="flex flex-col gap-1 border-t md:border-t-0 border-l border-zinc-200 pt-3 md:pt-0 pl-3 md:pl-4 mt-3 md:mt-0">
             <span className="text-[10px] uppercase font-bold text-zinc-400 flex items-center gap-1"><Hash className="w-3 h-3" /> Characters</span>
-            <span className="font-semibold text-sm md:text-base">{prompt.char_count || "N/A"}</span>
+            <span className="font-semibold text-sm md:text-base text-zinc-800">{prompt.char_count || "N/A"}</span>
           </div>
         </div>
-
-        {/* Tags */}
+        
         {prompt.tags && prompt.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-6">
             {prompt.tags.map((tag: string) => (
-              <span key={tag} className="text-xs font-semibold px-3 py-1.5 bg-zinc-100 text-zinc-600 border border-zinc-200 rounded-full shadow-sm hover:border-cyan-500/50 hover:text-cyan-500 transition-colors cursor-default">
+              <span key={tag} className="text-xs font-bold px-3 py-1.5 bg-white text-zinc-600 border border-zinc-200 rounded-full shadow-sm hover:border-cyan-500/50 hover:text-cyan-600 transition-colors cursor-default">
                 #{tag}
               </span>
             ))}
@@ -169,66 +248,82 @@ export default function PromptDetailPage() {
       </div>
 
       {/* =========================================
-          3. CODE BLOCK (THE PROMPT ITSELF)
+          3. CODE BLOCK & DROPDOWN
           ========================================= */}
       <div className="container mx-auto px-4 max-w-4xl relative z-20">
         <div className="relative mb-12 group">
-          {/* Mac Terminal Header Style */}
           <div className="flex items-center justify-between px-5 py-3.5 bg-zinc-100 border border-zinc-200 rounded-t-2xl">
             <div className="flex gap-2.5">
-              <div className="w-3 h-3 rounded-full bg-red-500 shadow-inner"></div>
-              <div className="w-3 h-3 rounded-full bg-amber-500 shadow-inner"></div>
-              <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-inner"></div>
+              <div className="w-3 h-3 rounded-full bg-red-400 shadow-inner"></div>
+              <div className="w-3 h-3 rounded-full bg-amber-400 shadow-inner"></div>
+              <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-inner"></div>
             </div>
             <span className="text-xs font-bold text-zinc-500 tracking-wider">prompt.txt</span>
           </div>
 
-          {/* Code Content */}
           <div className="relative bg-white border-x border-b border-zinc-200 rounded-b-2xl p-6 md:p-10 shadow-lg">
-            <pre className="whitespace-pre-wrap font-mono text-[15px] md:text-base text-zinc-800 leading-relaxed">
+            <pre className="whitespace-pre-wrap font-mono text-[14px] md:text-[15px] text-zinc-800 leading-relaxed">
               {prompt.content}
             </pre>
           </div>
 
-          {/* Floating Copy & Run Button */}
+          {/* Floating Dropdown Group */}
           <div className="absolute -bottom-6 right-6 md:right-10" ref={dropdownRef}>
-            <div className="flex shadow-2xl shadow-cyan-500/20 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform duration-300 ring-1 ring-white/20">
+            <div className="flex shadow-xl shadow-cyan-500/20 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform duration-300 ring-1 ring-zinc-900/5">
 
+              {/* Tombol Copy Saja */}
               <button
-                onClick={() => handleCopyAndRun()}
-                className={`flex items-center gap-2 px-6 py-3.5 font-extrabold transition-colors ${
-                  copied ? "bg-emerald-500 text-white" : "bg-cyan-500 hover:bg-cyan-400 text-white"
+                onClick={handleCopyOnly}
+                className={`flex items-center gap-2 px-6 py-3.5 font-extrabold transition-colors text-sm ${
+                  copied ? "bg-emerald-500 text-white" : "bg-zinc-900 hover:bg-zinc-800 text-white"
                 }`}
               >
-                {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copied ? "Copied!" : "Copy Prompt"}
               </button>
 
-              <div className="w-[1px] bg-black/10"></div>
+              <div className="w-[1px] bg-white/20"></div>
 
+              {/* Tombol Buka Dropdown */}
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="px-3 py-3.5 bg-cyan-500 hover:bg-cyan-400 text-white transition-colors"
+                className="px-3 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white transition-colors flex items-center justify-center"
               >
                 <ChevronDown className="w-5 h-5" />
               </button>
 
             </div>
 
-            {/* Shadcn-like Dropdown */}
+            {/* Isi Dropdown Options */}
             {isDropdownOpen && (
-              <div className="absolute right-0 top-full mt-3 w-56 bg-white border border-zinc-200 rounded-xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200 p-1.5">
-                <div className="px-3 py-2 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">
-                  Run Prompt Directly
+              <div className="absolute right-0 top-full mt-3 w-64 bg-white border border-zinc-200 rounded-2xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200 p-2">
+                <div className="px-3 py-2 text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                  <Sparkles className="w-3 h-3" /> Auto-Fill & Run
                 </div>
-                <button onClick={() => handleCopyAndRun("https://chatgpt.com/")} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-bold text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
-                  <Bot className="w-5 h-5 text-emerald-500" /> Open in ChatGPT
+                
+                <button onClick={() => handleRunPrompt("chatgpt")} className="group flex flex-col items-start w-full px-3 py-2.5 hover:bg-zinc-50 rounded-xl transition-colors border border-transparent hover:border-zinc-200">
+                  <div className="flex items-center gap-3 text-sm font-bold text-zinc-800 mb-0.5">
+                    <Bot className="w-4 h-4 text-emerald-500" /> ChatGPT
+                  </div>
+                  <span className="text-[11px] font-medium text-zinc-500 pl-7">Direct input via URL</span>
                 </button>
-                <button onClick={() => handleCopyAndRun("https://claude.ai/new")} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-bold text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
-                  <BrainCircuit className="w-5 h-5 text-amber-500" /> Open in Claude
+                
+                <button onClick={() => handleRunPrompt("claude")} className="group flex flex-col items-start w-full px-3 py-2.5 hover:bg-zinc-50 rounded-xl transition-colors border border-transparent hover:border-zinc-200">
+                  <div className="flex items-center gap-3 text-sm font-bold text-zinc-800 mb-0.5">
+                    <BrainCircuit className="w-4 h-4 text-amber-500" /> Claude AI
+                  </div>
+                  <span className="text-[11px] font-medium text-zinc-500 pl-7">Direct input via URL</span>
                 </button>
-                <button onClick={() => handleCopyAndRun("https://gemini.google.com/app")} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-bold text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
-                  <Sparkles className="w-5 h-5 text-blue-400" /> Open in Gemini
+                
+                <div className="h-[1px] bg-zinc-100 my-1 mx-2"></div>
+
+                <button onClick={() => handleRunPrompt("gemini")} className="group flex flex-col items-start w-full px-3 py-2.5 hover:bg-zinc-50 rounded-xl transition-colors border border-transparent hover:border-zinc-200">
+                  <div className="flex items-center gap-3 text-sm font-bold text-zinc-800 mb-0.5">
+                    <Sparkles className="w-4 h-4 text-blue-500" /> Google Gemini
+                  </div>
+                  <span className="text-[11px] font-medium flex items-center gap-1 text-orange-500 pl-7">
+                    <AlertCircle className="w-3 h-3" /> Manual paste needed
+                  </span>
                 </button>
               </div>
             )}
@@ -238,16 +333,15 @@ export default function PromptDetailPage() {
         {/* =========================================
             4. USAGE INSTRUCTIONS
             ========================================= */}
-        <div className="bg-white border border-zinc-200 rounded-3xl p-8 mt-24 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 blur-[50px] rounded-full pointer-events-none"></div>
+        <div className="bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 mt-24 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 blur-[50px] rounded-full pointer-events-none"></div>
           <h3 className="text-xl font-extrabold mb-4 flex items-center gap-2 text-zinc-900 relative z-10">
-            <ShieldAlert className="w-5 h-5 text-cyan-500" /> How to execute
+            <ShieldAlert className="w-5 h-5 text-cyan-500" /> Pro Tips
           </h3>
-          <ul className="list-disc list-inside space-y-3 text-zinc-600 ml-2 text-sm md:text-base relative z-10 font-medium">
-            <li>Click the arrow next to the Copy button to directly launch <strong>ChatGPT, Claude, or Gemini</strong>.</li>
-            <li>The prompt text is <strong>automatically copied</strong> to your clipboard.</li>
-            <li>Paste <kbd className="px-1.5 py-0.5 bg-zinc-100 rounded-md font-mono text-xs text-zinc-800 border border-zinc-200">Ctrl/Cmd + V</kbd> into the AI's input field.</li>
-            <li>If the prompt contains <code>[bracketed variables]</code>, be sure to replace them with your specific data before pressing Enter.</li>
+          <ul className="list-disc list-inside space-y-3 text-zinc-600 ml-2 text-sm md:text-[15px] relative z-10 font-medium">
+            <li>Click the arrow next to the Copy button to directly launch and auto-fill <strong>ChatGPT or Claude</strong>.</li>
+            <li>For <strong>Gemini</strong>, the text is automatically copied, simply paste it in the chat box.</li>
+            <li>If the prompt contains <code className="bg-zinc-100 text-zinc-800 px-1.5 py-0.5 rounded text-xs border border-zinc-200">[bracketed variables]</code>, be sure to replace them with your specific data before pressing Enter.</li>
           </ul>
         </div>
 
