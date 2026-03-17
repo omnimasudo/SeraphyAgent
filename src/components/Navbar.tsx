@@ -28,7 +28,7 @@ export default function Navbar() {
     <header 
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b ${
         isScrolled 
-          ? "bg-white/80 dark:bg-[#0B1115]/80 backdrop-blur-md border-zinc-200 dark:border-white/10 shadow-sm py-3" 
+          ? "bg-white/80 dark:bg-[#0B1115]/80 backdrop-blur-md border-zinc-200 dark:border-cyan-900/10 shadow-sm shadow-cyan-900/5 py-3" 
           : "bg-transparent border-transparent py-5"
       }`}
     >
@@ -37,7 +37,7 @@ export default function Navbar() {
         {/* Brand Logo with Avatar Image */}
         <Link href="/" className="flex items-center gap-3 group">
           {/* Container Maskot Bulat */}
-          <div className="relative w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-white dark:border-white/10 shadow-sm group-hover:scale-105 group-hover:border-cyan-500/50 transition-all duration-300">
+          <div className="relative w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-white dark:border-white/10 shadow-sm group-hover:scale-105 group-hover:border-cyan-400 transition-all duration-300">
             {/* Pastikan file ini ada di public/logo.jpeg */}
             <img 
               src="/logo.jpeg" 
@@ -46,7 +46,7 @@ export default function Navbar() {
             />
           </div>
           <span className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-            Seraphy<span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-400">Agent</span>
+            Seraphy<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">Agent</span>
           </span>
         </Link>
 
@@ -63,10 +63,10 @@ export default function Navbar() {
                   className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-bold transition-all ${
                     isActive 
                       ? "bg-white dark:bg-cyan-500/10 text-zinc-900 dark:text-cyan-400 shadow-sm border border-zinc-200/50 dark:border-cyan-500/20" 
-                      : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-white/5"
+                      : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-cyan-300 hover:bg-zinc-200/50 dark:hover:bg-cyan-500/5"
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className={`w-4 h-4 ${isActive ? "text-cyan-500" : ""}`} />
                   {link.name}
                 </Link>
               );
