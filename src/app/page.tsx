@@ -56,7 +56,7 @@ export default async function HomePage() {
     { name: "CommandCode", logo: "/commandCodeAI.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg" },
     { name: "Cognition", logo: "/Cognition_PrimaryLockup_Black.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg scale-125 origin-center" },
     { name: "CodeRabbit", logo: "/code-rabbit.png" },
-    { name: "Each Labs", logo: "/each-labs.jpg", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg" },
+    { name: "Each Labs", logo: "/each-labs.jpg", className: "bg-white/90 backdrop-blur-sm p-3 rounded-xl scale-125 shadow-lg border border-cyan-200/50" },
     { name: "Wiro", logo: "/wiro.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg" },
   ];
 
@@ -164,7 +164,11 @@ export default async function HomePage() {
               {/* Duplicate sponsors for seamless infinite scroll */}
               {[...sponsors, ...sponsors].map((sponsor, index) => (
                 <div key={`${sponsor.name}-${index}`} className={`relative h-12 w-32 md:w-40 flex items-center justify-center flex-shrink-0 ${sponsor.className || ''}`}>
-                  <img src={sponsor.logo} alt={sponsor.name} className="max-h-full max-w-full object-contain" />
+                  <img 
+                    src={sponsor.logo} 
+                    alt={sponsor.name} 
+                    className={`max-h-full max-w-full object-contain ${sponsor.name === 'Each Labs' ? 'scale-110 rounded-lg border-2 border-cyan-300/60 shadow-md' : ''}`}
+                  />
                 </div>
               ))}
             </div>
