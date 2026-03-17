@@ -1,35 +1,27 @@
 import { Prompt, Skill, Category, Tag, Promptmaster, Summary } from '@/types';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-
 export async function getPrompts(): Promise<Prompt[]> {
-  const res = await fetch(`${BASE_URL}/data/prompts.json`);
-  return res.json();
+  return getPromptsSync();
 }
 
 export async function getSkills(): Promise<Skill[]> {
-  const res = await fetch(`${BASE_URL}/data/skills.json`);
-  return res.json();
+  return getSkillsSync();
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const res = await fetch(`${BASE_URL}/data/categories.json`);
-  return res.json();
+  return getCategoriesSync();
 }
 
 export async function getTags(): Promise<Tag[]> {
-  const res = await fetch(`${BASE_URL}/data/tags.json`);
-  return res.json();
+  return getTagsSync();
 }
 
 export async function getPromptmasters(): Promise<Promptmaster[]> {
-  const res = await fetch(`${BASE_URL}/data/promptmasters.json`);
-  return res.json();
+  return getPromptmastersSync();
 }
 
 export async function getSummary(): Promise<Summary> {
-  const res = await fetch(`${BASE_URL}/data/summary.json`);
-  return res.json();
+  return getSummarySync();
 }
 
 // For server components - direct import

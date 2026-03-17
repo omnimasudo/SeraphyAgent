@@ -1,36 +1,36 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// Menggunakan font Inter untuk kesan bersih/clean
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SeraphyAgent - AI Prompt Library",
-  description: "Discover 1,478+ curated AI prompts and 40 agent skills. Find the perfect prompt for ChatGPT, Claude, Gemini and more.",
-  keywords: ["AI prompts", "ChatGPT prompts", "Claude prompts", "prompt engineering", "AI assistant"],
+  title: "SeraphyAgent | AI Prompts & Skills Directory",
+  description: "Discover, copy, and use the best AI prompts and skills for ChatGPT, Claude, and Gemini.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: ReadReadOnly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900 min-h-screen`}
-      >
+    <html lang="en" className="scroll-smooth">
+      <body className={`${inter.className} bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased`}>
+        {/* Global Navbar */}
         <Navbar />
-        <main>{children}</main>
+        
+        {/* Konten Halaman */}
+        <div className="flex flex-col min-h-screen">
+          {children}
+        </div>
+
+        {/* Global Footer (Opsional, sangat disarankan untuk kesan profesional) */}
+        <footer className="py-8 text-center text-zinc-500 border-t border-zinc-200 dark:border-zinc-800 mt-auto bg-white dark:bg-zinc-950">
+          <p className="text-sm">© {new Date().getFullYear()} SeraphyAgent. Built with ❤️ for AI Enthusiasts.</p>
+        </footer>
       </body>
     </html>
   );
