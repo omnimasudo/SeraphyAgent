@@ -66,14 +66,14 @@ export default function PromptCard({ prompt }: PromptProps) {
     : "Community";
 
   return (
-    <div className="group flex flex-col h-full bg-white dark:bg-[#0B1115]/60 border border-zinc-200 dark:border-white/10 rounded-2xl shadow-sm hover:shadow-2xl dark:hover:shadow-cyan-900/20 hover:border-cyan-500/50 dark:hover:border-cyan-500/50 backdrop-blur-sm transition-all duration-300 overflow-hidden relative">
+    <div className="group flex flex-col h-full bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-2xl hover:border-cyan-500/50 backdrop-blur-sm transition-all duration-300 overflow-hidden relative">
       
       {/* Highlight Glow saat Hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
 
       {/* 1. Thumbnail Image Area (Conditional) */}
       {prompt.image && (
-        <div className="relative w-full aspect-video md:h-44 overflow-hidden border-b border-zinc-100 dark:border-white/5 bg-zinc-100 dark:bg-zinc-900 flex-shrink-0">
+        <div className="relative w-full aspect-video md:h-44 overflow-hidden border-b border-zinc-100 bg-zinc-100 flex-shrink-0">
           <img 
             src={prompt.image} 
             alt={prompt.title} 
@@ -98,12 +98,12 @@ export default function PromptCard({ prompt }: PromptProps) {
         {!prompt.image && (
           <div className="flex justify-between items-start gap-2 mb-3">
             <div className="flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-300 border border-transparent dark:border-white/10">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-zinc-100 text-zinc-600 border border-transparent">
                 {getIcon(prompt.category || "")}
                 {prompt.category || "General"}
               </span>
               {prompt.for_devs && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 border border-cyan-100 dark:border-cyan-800/30">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-50 text-cyan-600 border border-cyan-100">
                   <Code className="w-3 h-3" /> Devs
                 </span>
               )}
@@ -114,7 +114,7 @@ export default function PromptCard({ prompt }: PromptProps) {
         {/* Jika ada gambar, badge For Devs pindah ke atas judul */}
         {prompt.image && prompt.for_devs && (
           <div className="mb-2">
-             <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 border border-cyan-100 dark:border-cyan-800/30">
+             <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-50 text-cyan-600 border border-cyan-100">
                 <Code className="w-3 h-3" /> For Devs
               </span>
           </div>
@@ -122,10 +122,10 @@ export default function PromptCard({ prompt }: PromptProps) {
 
         {/* Judul & Deskripsi */}
         <Link href={`/prompts/${prompt.slug || prompt.id}`} className="block group/link flex-grow">
-          <h3 className="text-lg font-extrabold text-zinc-900 dark:text-zinc-100 mb-2 leading-snug group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 transition-colors line-clamp-2">
+          <h3 className="text-lg font-extrabold text-zinc-900 mb-2 leading-snug group-hover/link:text-cyan-600 transition-colors line-clamp-2">
             {prompt.title}
           </h3>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 line-clamp-2 md:line-clamp-3 leading-relaxed mb-4">
+          <p className="text-sm text-zinc-500 line-clamp-2 md:line-clamp-3 leading-relaxed mb-4">
             {prompt.description || prompt.content}
           </p>
         </Link>
@@ -134,7 +134,7 @@ export default function PromptCard({ prompt }: PromptProps) {
         {prompt.tags && prompt.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-auto">
             {prompt.tags.slice(0, 3).map(tag => (
-              <span key={tag} className="text-[10px] font-semibold px-2 py-0.5 bg-zinc-50 dark:bg-white/5 text-zinc-500 dark:text-zinc-400 rounded-full border border-zinc-200 dark:border-white/10">
+              <span key={tag} className="text-[10px] font-semibold px-2 py-0.5 bg-zinc-50 text-zinc-500 rounded-full border border-zinc-200">
                 #{tag}
               </span>
             ))}
@@ -146,10 +146,10 @@ export default function PromptCard({ prompt }: PromptProps) {
       </div>
 
       {/* 3. Footer Action */}
-      <div className="p-4 border-t border-zinc-100 dark:border-white/5 flex items-center justify-between bg-zinc-50/50 dark:bg-[#070b0e]/50 z-10">
+      <div className="p-4 border-t border-zinc-100 flex items-center justify-between bg-zinc-50/50 z-10">
         
         {/* Kontributor */}
-        <div className="flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+        <div className="flex items-center gap-2 text-xs font-medium text-zinc-500">
           <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-cyan-500 to-teal-400 text-[#0B1115] flex items-center justify-center text-[10px] font-bold shadow-inner">
             {authorName.charAt(0).toUpperCase()}
           </div>
@@ -164,7 +164,7 @@ export default function PromptCard({ prompt }: PromptProps) {
               className={`flex items-center gap-1.5 pl-3 pr-2 py-1.5 text-xs font-bold rounded-l-lg border border-r-0 transition-colors ${
                 copied 
                 ? "bg-emerald-500 border-emerald-500 text-white" 
-                : "bg-white dark:bg-white/5 border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/10"
+                : "bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-100"
               }`}
             >
               {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -172,25 +172,25 @@ export default function PromptCard({ prompt }: PromptProps) {
             </button>
             <button
               onClick={(e) => { e.preventDefault(); setIsDropdownOpen(!isDropdownOpen); }}
-              className="flex items-center px-1.5 py-1.5 bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-r-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+              className="flex items-center px-1.5 py-1.5 bg-white border border-zinc-200 rounded-r-lg text-zinc-500 hover:bg-zinc-100 transition-colors"
             >
               <ChevronDown className="w-3.5 h-3.5" />
             </button>
           </div>
 
           {isDropdownOpen && (
-            <div className="absolute right-0 bottom-full mb-2 w-48 bg-white dark:bg-[#0B1115] border border-zinc-200 dark:border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
-              <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/5">
+            <div className="absolute right-0 bottom-full mb-2 w-48 bg-white border border-zinc-200 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+              <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500 border-b border-zinc-100 bg-zinc-50">
                 Run in AI
               </div>
               <div className="p-1 flex flex-col gap-0.5">
-                <button onClick={(e) => handleCopy(e, "https://chatgpt.com/")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5 rounded-md transition-colors">
+                <button onClick={(e) => handleCopy(e, "https://chatgpt.com/")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 hover:bg-zinc-100 rounded-md transition-colors">
                   <Bot className="w-4 h-4 text-emerald-500" /> ChatGPT
                 </button>
-                <button onClick={(e) => handleCopy(e, "https://claude.ai/new")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5 rounded-md transition-colors">
+                <button onClick={(e) => handleCopy(e, "https://claude.ai/new")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 hover:bg-zinc-100 rounded-md transition-colors">
                   <BrainCircuit className="w-4 h-4 text-amber-500" /> Claude
                 </button>
-                <button onClick={(e) => handleCopy(e, "https://gemini.google.com/app")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5 rounded-md transition-colors">
+                <button onClick={(e) => handleCopy(e, "https://gemini.google.com/app")} className="flex items-center gap-2 w-full px-2 py-2 text-sm text-left text-zinc-700 hover:bg-zinc-100 rounded-md transition-colors">
                   <Sparkles className="w-4 h-4 text-blue-400" /> Gemini
                 </button>
               </div>

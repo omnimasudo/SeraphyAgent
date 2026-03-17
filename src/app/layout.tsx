@@ -10,6 +10,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "SeraphyAgent | AI Prompts & Skills Directory",
   description: "Discover, copy, and use the best AI prompts and skills for ChatGPT, Claude, and Gemini.",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
@@ -19,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased`}>
+      <body className={`${inter.className} bg-zinc-50 text-zinc-900 antialiased`}>
         {/* Global Navbar */}
         <Navbar />
         

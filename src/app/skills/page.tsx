@@ -37,20 +37,20 @@ export default function SkillsPage() {
   }, [skills, searchQuery]);
 
   return (
-    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 pt-24 pb-20">
+    <main className="min-h-screen bg-zinc-50 text-zinc-900 pt-24 pb-20">
       
       {/* Header Section */}
       <section className="container mx-auto px-4 max-w-7xl mb-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 text-xs font-bold uppercase tracking-wider rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50">
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 text-xs font-bold uppercase tracking-wider rounded-full bg-indigo-100 text-indigo-700 border border-indigo-200">
               <Zap className="w-3.5 h-3.5" />
               <span>Powerful Agents</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
               AI Skills & Tools
             </h1>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            <p className="text-lg text-zinc-600 leading-relaxed">
               Supercharge your workflow with custom AI skills, agents, and specialized tools built for specific tasks.
             </p>
           </div>
@@ -64,7 +64,7 @@ export default function SkillsPage() {
               placeholder="Search skills or agents..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-11 pr-4 py-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-sm shadow-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+              className="block w-full pl-11 pr-4 py-3.5 bg-white border border-zinc-200 rounded-2xl text-sm shadow-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
             />
           </div>
         </div>
@@ -84,17 +84,17 @@ export default function SkillsPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl shadow-sm">
-            <div className="w-20 h-20 mb-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-full flex items-center justify-center">
-              <Cpu className="w-10 h-10 text-indigo-400 dark:text-indigo-500" />
+          <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-white border border-zinc-200 rounded-3xl shadow-sm">
+            <div className="w-20 h-20 mb-6 bg-indigo-50 rounded-full flex items-center justify-center">
+              <Cpu className="w-10 h-10 text-indigo-400" />
             </div>
             <h3 className="text-2xl font-bold mb-2">No skills found</h3>
-            <p className="text-zinc-500 dark:text-zinc-400 max-w-md mx-auto mb-8">
+            <p className="text-zinc-500 max-w-md mx-auto mb-8">
               We couldn't find any tools matching "{searchQuery}". Try a different keyword.
             </p>
             <button 
               onClick={() => setSearchQuery("")}
-              className="px-6 py-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold rounded-xl transition-all shadow-sm flex items-center gap-2"
+              className="px-6 py-3 bg-zinc-900 text-white font-semibold rounded-xl transition-all shadow-sm flex items-center gap-2"
             >
               Clear Search <ArrowRight className="w-4 h-4" />
             </button>

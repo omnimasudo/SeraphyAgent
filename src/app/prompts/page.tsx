@@ -96,18 +96,18 @@ export default function PromptsPage() {
   );
 
   return (
-    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 pt-24 pb-20">
+    <main className="min-h-screen bg-zinc-50 text-zinc-900 pt-24 pb-20">
       <section className="container mx-auto px-4 max-w-7xl mb-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 text-xs font-bold uppercase tracking-wider rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50">
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 text-xs font-bold uppercase tracking-wider rounded-full bg-blue-100 text-blue-700 border border-blue-200">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Prompt Directory</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
               Discover AI Prompts
             </h1>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            <p className="text-lg text-zinc-600 leading-relaxed">
               Explore our curated collection of high-quality prompts. Search by keyword, tag, or creator to find exactly what you need.
             </p>
           </div>
@@ -121,22 +121,22 @@ export default function PromptsPage() {
               placeholder="Search prompts, tags, or authors..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-11 pr-4 py-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-sm shadow-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              className="block w-full pl-11 pr-4 py-3.5 bg-white border border-zinc-200 rounded-2xl text-sm shadow-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             />
           </div>
         </div>
 
         {/* Category Filters */}
         <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className="flex items-center gap-2 text-sm font-semibold text-zinc-500 dark:text-zinc-400 mr-2 flex-shrink-0">
+          <div className="flex items-center gap-2 text-sm font-semibold text-zinc-500 mr-2 flex-shrink-0">
             <SlidersHorizontal className="w-4 h-4" /> Filters:
           </div>
           <button
             onClick={() => setSelectedCategory("all")}
             className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${
               selectedCategory === "all"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-md"
-                : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                ? "bg-zinc-900 text-white shadow-md"
+                : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
             }`}
           >
             All Prompts
@@ -147,8 +147,8 @@ export default function PromptsPage() {
               onClick={() => setSelectedCategory(category.slug)}
               className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all capitalize ${
                 selectedCategory === category.slug
-                  ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-md"
-                  : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                  ? "bg-zinc-900 text-white shadow-md"
+                  : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
               }`}
             >
               {category.name}
@@ -178,7 +178,7 @@ export default function PromptsPage() {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
-                  className="p-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-cyan-200 dark:hover:border-cyan-800 hover:text-cyan-600 dark:hover:text-cyan-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  className="p-2.5 rounded-xl bg-white border border-zinc-200 text-zinc-500 hover:border-cyan-200 hover:text-cyan-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -197,7 +197,7 @@ export default function PromptsPage() {
                         className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${
                           currentPage === pageNum 
                             ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25 scale-105" 
-                            : "text-zinc-500 dark:text-zinc-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/10 hover:text-cyan-600 dark:hover:text-cyan-400"
+                            : "text-zinc-500 hover:bg-cyan-50 hover:text-cyan-600"
                         }`}
                       >
                         {pageNum}
@@ -209,7 +209,7 @@ export default function PromptsPage() {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages}
-                  className="p-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-cyan-200 dark:hover:border-cyan-800 hover:text-cyan-600 dark:hover:text-cyan-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  className="p-2.5 rounded-xl bg-white border border-zinc-200 text-zinc-500 hover:border-cyan-200 hover:text-cyan-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -217,17 +217,17 @@ export default function PromptsPage() {
             )}
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl shadow-sm">
-            <div className="w-20 h-20 mb-6 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center">
-              <FileQuestion className="w-10 h-10 text-zinc-400 dark:text-zinc-500" />
+          <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-white border border-zinc-200 rounded-3xl shadow-sm">
+            <div className="w-20 h-20 mb-6 bg-zinc-100 rounded-full flex items-center justify-center">
+              <FileQuestion className="w-10 h-10 text-zinc-400" />
             </div>
             <h3 className="text-2xl font-bold mb-2">No prompts found</h3>
-            <p className="text-zinc-500 dark:text-zinc-400 max-w-md mx-auto mb-8">
+            <p className="text-zinc-500 max-w-md mx-auto mb-8">
               We couldn't find any prompts matching "{searchQuery}".
             </p>
             <button 
               onClick={() => { setSearchQuery(""); setSelectedCategory("all"); }}
-              className="px-6 py-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold rounded-xl transition-all shadow-sm"
+              className="px-6 py-3 bg-zinc-900 text-white font-semibold rounded-xl transition-all shadow-sm"
             >
               Clear all filters
             </button>
