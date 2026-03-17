@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Terminal, Users, Zap, Menu, X, Plus } from "lucide-react";
+import { Terminal, Users, Zap, Menu, X, Plus, Github, Twitter } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -76,7 +76,24 @@ export default function Navbar() {
 
         {/* Right Action Buttons */}
         <div className="hidden md:flex items-center gap-4">
-        
+          <a 
+            href="https://x.com/seraphyagent" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="p-2 text-zinc-500 hover:text-cyan-500 transition-colors rounded-full hover:bg-zinc-100"
+            title="Follow us on X"
+          >
+            <Twitter className="w-5 h-5" />
+          </a>
+          <a 
+            href="https://github.com/omnimasudo/SeraphyAgent" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="p-2 text-zinc-500 hover:text-cyan-500 transition-colors rounded-full hover:bg-zinc-100"
+            title="View on GitHub"
+          >
+            <Github className="w-5 h-5" />
+          </a>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -113,6 +130,28 @@ export default function Navbar() {
               );
             })}
             <hr className="my-2 border-zinc-100" />
+            
+            {/* Social Links */}
+            <div className="flex items-center justify-center gap-4 pt-2">
+              <a 
+                href="https://x.com/seraphyagent" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 text-zinc-500 hover:text-cyan-500 transition-colors rounded-full hover:bg-zinc-100"
+                title="Follow us on X"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://github.com/omnimasudo/SeraphyAgent" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 text-zinc-500 hover:text-cyan-500 transition-colors rounded-full hover:bg-zinc-100"
+                title="View on GitHub"
+              >
+                <Github className="w-5 h-5" />
+              </a>
+            </div>
             
           </div>
         </div>

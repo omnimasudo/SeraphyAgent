@@ -125,7 +125,7 @@ export default function PromptmastersPage() {
           </div>
         ) : paginatedMasters.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <div className="grid grid-cols-1 gap-6 mb-12">
               {paginatedMasters.map((master) => (
                 <Link 
                   href={`/promptmasters/${master.username}`}
