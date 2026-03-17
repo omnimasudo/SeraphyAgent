@@ -16,14 +16,16 @@ export interface Prompt {
 
 export interface Skill {
   id: number;
-  title: string;
+  name: string;
   slug: string;
   description: string;
-  type: 'SKILL';
   category: string;
-  tags: string[];
-  contributor: string;
-  content: string;
+  tags?: string[];
+  author: string;
+  github_url: string;
+  install_command: string;
+  featured?: boolean;
+  popular?: boolean;
 }
 
 export interface Category {

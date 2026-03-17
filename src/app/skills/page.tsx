@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Search, Zap, Loader2, Cpu, ArrowRight, ChevronLeft, ChevronRight, X, Sparkles, Filter } from "lucide-react";
+import { Search, Zap, Loader2, Sparkles, Filter, X } from "lucide-react";
 import SkillCard from "@/components/SkillCard";
-import SeraphyChatModal from "@/components/SeraphyChatModal";
+import { getCategoryConfig } from "@/lib/categoryUtils";
+
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState<any[]>([]);
@@ -16,10 +17,7 @@ export default function SkillsPage() {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
-
-  // Ask Seraphy State
-  const [isSeraphyOpen, setIsSeraphyOpen] = useState(false);
+  const itemsPerPage = 12; // Increased to 12 for better grid layout
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,10 +34,17 @@ export default function SkillsPage() {
         // Normalize skills data
         const skillsArray = Array.isArray(skillsData) ? skillsData : (skillsData.skills || []);
         
+        // Sort categories by count if available, or just take top ones
+        let sortedCats = Array.isArray(catsData) ? catsData : [];
+        if (sortedCats.length > 0 && sortedCats[0].count !== undefined) {
+             sortedCats = sortedCats.sort((a: any, b: any) => b.count - a.count);
+        }
+
         setSkills(skillsArray);
-        setCategories([{ name: "All", slug: "all" }, ...(Array.isArray(catsData) ? catsData : [])]);
+        setCategories([{ name: "All", slug: "all" }, ...sortedCats]);
       } catch (error) {
         console.error("Failed to fetch data:", error);
+        // Fallback or empty state
         setSkills([]);
       } finally {
         setIsLoading(false);
@@ -62,9 +67,6 @@ export default function SkillsPage() {
         skill.description?.toLowerCase().includes(searchLower);
       
       const matchesCategory = activeCategory === "All" || skill.category === activeCategory || (categories.find(c => c.name === activeCategory)?.name === skill.category);
-      
-      // Note: skills-categories.json logic can be implemented similarly if needed,
-      // currently defaulting to categories.json for consistent UI.
 
       return matchesSearch && matchesCategory;
     });
@@ -80,11 +82,6 @@ export default function SkillsPage() {
   return (
     <main className="min-h-screen bg-zinc-50 text-zinc-900 pt-24 pb-20">
       
-      {/* Ask Seraphy Modal */}
-      {isSeraphyOpen && (
-          <SeraphyChatModal isOpen={isSeraphyOpen} onClose={() => setIsSeraphyOpen(false)} />
-      )}
-
       {/* Header Section */}
       <section className="container mx-auto px-4 max-w-7xl mb-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
@@ -102,148 +99,134 @@ export default function SkillsPage() {
           </div>
         </div>
 
-        {/* Distinct Search & Filter Bar */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-zinc-200 mb-8 max-w-5xl mx-auto">
-            <div className="flex flex-col lg:flex-row gap-6 items-center">
-                
-                {/* Search Input - Distinct Style - Larger and clearer */}
-                <div className="relative w-full md:w-80 lg:w-96 flex-shrink-0 group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <Search className="h-5 w-5 text-zinc-400 group-focus-within:text-cyan-500 transition-colors" />
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="Search skills..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="block w-full pl-11 pr-10 py-3 bg-zinc-50 border border-zinc-200 rounded-2xl text-sm font-medium placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all hover:bg-zinc-100 focus:bg-white"
-                    />
-                    {searchQuery && (
-                        <button 
-                            onClick={() => setSearchQuery("")}
-                            className="absolute inset-y-0 right-3 flex items-center text-zinc-400 hover:text-zinc-600 p-1"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    )}
-                </div>
+        {/* Enhanced Search Bar */}
+        <div className="relative max-w-3xl mx-auto md:mx-0 mb-10 group">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-zinc-400 group-focus-within:text-cyan-600 transition-colors" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search skills, agents, or tools..."
+            className="block w-full pl-12 pr-4 py-4 bg-white border border-zinc-200 rounded-2xl text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all shadow-sm hover:shadow-md"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button 
+              onClick={() => setSearchQuery("")}
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-zinc-400 hover:text-zinc-600"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
+        </div>
 
-                {/* Ask Seraphy Button - Distinct CTA - Repositioned */}
-                <button
-                    onClick={() => setIsSeraphyOpen(true)}
-                    className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-bold rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-cyan-500/25 group whitespace-nowrap"
-                >
-                    <Sparkles className="w-5 h-5 text-yellow-300 group-hover:rotate-12 transition-transform" />
-                    <span>Ask Seraphy</span>
-                </button>
-
-            </div>
-            
-            {/* Category Filter - Responsive Grid Layout */}
-            <div className="mt-6 pt-6 border-t border-zinc-100 w-full">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
-                    {categories.map((cat) => (
-                        <button
-                            key={cat.id || cat.slug || cat.name}
-                            onClick={() => setActiveCategory(cat.name)}
-                            className={`w-full px-3 py-2.5 rounded-xl text-xs font-bold border transition-all select-none ${
-                                activeCategory === cat.name
-                                ? "bg-cyan-600 text-white border-cyan-600 shadow-md shadow-cyan-500/20 scale-105"
-                                : "bg-white text-zinc-500 border-zinc-200 hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-700"
-                            }`}
-                        >
-                            {cat.name}
-                        </button>
-                    ))}
-                </div>
-            </div>
+        {/* Enhanced Categories - Horizontal Scroll Pills */}
+        <div className="relative">
+          <div className="flex items-center gap-2 px-1 overflow-x-auto pb-4 scrollbar-hide mask-fade-right">
+             <div className="flex items-center gap-2 p-1">
+                {categories.map((cat) => {
+                  const isActive = activeCategory === cat.name;
+                  // Use custom color if defined, otherwise default
+                  const colorClass = isActive 
+                    ? "bg-zinc-900 text-white border-zinc-900 shadow-lg shadow-zinc-900/20 transform scale-105" 
+                    : getCategoryConfig(cat.name).badge;
+                  
+                  return (
+                    <button
+                      key={cat.slug || cat.name}
+                      onClick={() => setActiveCategory(cat.name)}
+                      className={`
+                        whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200
+                        ${colorClass}
+                      `}
+                    >
+                      {cat.name}
+                      {cat.count !== undefined && (
+                        <span className={`ml-2 text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-zinc-100 text-zinc-500'}`}>
+                          {cat.count}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+             </div>
+          </div>
+          {/* Fade effect on right for scrolling hints could be added here */}
         </div>
       </section>
 
       {/* Grid Content */}
       <section className="container mx-auto px-4 max-w-7xl">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-32 text-zinc-400">
-            <Loader2 className="w-10 h-10 animate-spin mb-4 text-cyan-500" />
-            <p className="font-medium animate-pulse">Initializing agents...</p>
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="w-12 h-12 animate-spin text-cyan-600 mb-4" />
+            <p className="text-zinc-500 font-medium">Loading skills...</p>
           </div>
         ) : filteredSkills.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {currentSkills.map((skill, idx) => (
-                <SkillCard key={skill.id || idx} skill={skill} />
-              ))}
-            </div>
-
-            {/* Pagination Controls - Limited View */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-8 mb-12">
-                <button
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="p-3 rounded-xl bg-white border border-zinc-200 text-zinc-500 hover:border-cyan-200 hover:text-cyan-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                
-                <div className="flex items-center gap-1.5 px-4 hidden sm:flex">
-                  {Array.from({ length: totalPages }).map((_, idx) => {
-                    const pageNum = idx + 1;
-                    const isNearCurrent = Math.abs(currentPage - pageNum) <= 1;
-                    const isEdge = pageNum === 1 || pageNum === totalPages;
-                    
-                    if (!isNearCurrent && !isEdge) {
-                       if (pageNum === 2 || pageNum === totalPages - 1) {
-                           return <span key={idx} className="text-zinc-300 px-1 text-xs">•••</span>;
-                       }
-                       return null;
-                    }
-                    
-                    return (
-                      <button
-                        key={idx}
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${
-                          currentPage === pageNum 
-                            ? "bg-cyan-600 text-white shadow-lg shadow-cyan-500/25 scale-110" 
-                            : "bg-white border border-zinc-200 text-zinc-500 hover:bg-cyan-50 hover:text-cyan-600 hover:border-cyan-200"
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
-                </div>
-                {/* Mobile Page Indicator */}
-                <span className="text-sm font-medium text-zinc-500 sm:hidden px-4">
-                    Page {currentPage} of {totalPages}
-                </span>
-
-                <button
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                  className="p-3 rounded-xl bg-white border border-zinc-200 text-zinc-500 hover:border-cyan-200 hover:text-cyan-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-            )}
-          </>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {currentSkills.map((skill, idx) => (
+              <SkillCard key={skill.id || idx} skill={skill} />
+            ))}
+          </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-white border border-zinc-200 rounded-3xl shadow-sm max-w-2xl mx-auto">
-            <div className="w-20 h-20 mb-6 bg-cyan-50 rounded-full flex items-center justify-center">
-              <Filter className="w-10 h-10 text-cyan-400" />
+          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-zinc-300">
+            <div className="p-4 bg-zinc-50 rounded-full mb-4">
+               <Filter className="w-8 h-8 text-zinc-400" />
             </div>
-            <h3 className="text-2xl font-bold mb-2">No skills found</h3>
-            <p className="text-zinc-500 max-w-md mx-auto mb-8">
-              We couldn't find any tools matching your filters. Try adjusting your search query or category filter.
+            <h3 className="text-xl font-bold text-zinc-900 mb-2">No skills found</h3>
+            <p className="text-zinc-500 max-w-md text-center">
+              We couldn't find any skills matching "{searchQuery}" in {activeCategory}. 
+              Try adjusting your search or category filter.
             </p>
             <button 
-              onClick={() => {setSearchQuery(""); setActiveCategory("All");}}
-              className="px-6 py-3 bg-zinc-900 text-white font-semibold rounded-xl transition-all shadow-sm flex items-center gap-2 hover:bg-zinc-800"
+              onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
+              className="mt-6 px-6 py-2 bg-zinc-900 text-white rounded-xl hover:bg-zinc-800 transition-colors font-medium"
             >
-              Clear Filters <ArrowRight className="w-4 h-4" />
+              Clear Filters
             </button>
+          </div>
+        )}
+
+        {/* Improved Pagination */}
+        {!isLoading && filteredSkills.length > itemsPerPage && (
+          <div className="mt-16 flex justify-center">
+            <div className="flex items-center gap-2 p-2 bg-white border border-zinc-200 rounded-2xl shadow-sm">
+                <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 disabled:opacity-30 disabled:hover:text-zinc-600 transition-colors"
+                >
+                    Previous
+                </button>
+                <div className="flex items-center gap-1 px-2 border-x border-zinc-100">
+                   {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                      // Simple logic to show first few pages, in real app complex logic needed
+                      const pageNum = i + 1;
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setCurrentPage(pageNum)}
+                          className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+                             currentPage === pageNum 
+                             ? 'bg-zinc-900 text-white shadow-sm' 
+                             : 'text-zinc-500 hover:bg-zinc-50'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      )
+                   })}
+                   {totalPages > 5 && <span className="px-1 text-zinc-400">...</span>}
+                </div>
+                <button
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 disabled:opacity-30 disabled:hover:text-zinc-600 transition-colors"
+                >
+                    Next
+                </button>
+            </div>
           </div>
         )}
       </section>

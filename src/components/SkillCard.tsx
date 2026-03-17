@@ -1,42 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { ArrowUpRight, Cpu, Terminal, Check, Star } from "lucide-react";
+import { ArrowUpRight, Cpu, Star } from "lucide-react";
+import { getCategoryConfig } from "@/lib/categoryUtils";
 
 export default function SkillCard({ skill }: { skill: any }) {
-  const [copied, setCopied] = useState(false);
-  
   // Clean, fallback values
   const category = skill.category || "General";
   const author = skill.author || "Unknown";
   // Truncate long category names for aesthetics if needed, but flex wrap handles it mostly
   const displayCategory = category.length > 25 ? category.split(' ')[0] + '...' : category;
   
-  const installCmd = skill.install_command || `npx clawhub install ${skill.name}`;
-
-  const handleCopy = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    navigator.clipboard.writeText(installCmd);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
+  const { icon: CategoryIcon, color, border } = getCategoryConfig(category);
+  
   return (
-    <div className="group flex flex-col h-full bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-xl hover:border-cyan-300 transition-all duration-300 overflow-visible relative mt-4">
+    <Link 
+      href={`/skills/${skill.slug || skill.id}`}
+      className="group flex flex-col h-full bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-xl hover:border-cyan-300 transition-all duration-300 overflow-visible relative mt-4 cursor-pointer"
+    >
     
       {/* Category Badge - Floating Absolutely "Outside" on Top Right */}
       <div className="absolute -top-3 right-4 z-20">
-        <div className="flex items-center gap-1.5 px-3 py-1 bg-white border border-zinc-200 rounded-full shadow-sm text-[10px] font-bold uppercase tracking-wider text-zinc-500 group-hover:border-cyan-300 group-hover:text-cyan-600 transition-colors">
-            <Cpu className="w-3 h-3" />
-            {displayCategory}
+        <div className={`flex items-center gap-1.5 px-3 py-1 bg-white border rounded-full shadow-sm text-[10px] font-bold uppercase tracking-wider transition-colors ${border} ${color}`}>
+            <CategoryIcon className={`w-3 h-3 ${color}`} />
+            <span>{displayCategory}</span>
         </div>
       </div>
       
-      {/* Clickable Area Overlay */}
-      <Link href={`/skills/${skill.slug || skill.id}`} className="absolute inset-0 z-0 rounded-2xl overflow-hidden" />
-
       {/* Top Banner Accent - Inside main content */}
       <div className="absolute top-0 left-0 right-0 h-1.5 w-full bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-2xl z-10"></div>
 
@@ -59,7 +49,7 @@ export default function SkillCard({ skill }: { skill: any }) {
                 {skill.name || skill.title}
             </h3>
             <p className="text-xs text-zinc-400">
-                by <span className="font-semibold text-zinc-600 hover:text-cyan-600 transition-colors z-20 relative">{author}</span>
+                by <span className="font-semibold text-zinc-600 group-hover:text-cyan-600 transition-colors">{author}</span>
             </p>
         </div>
         
@@ -69,24 +59,18 @@ export default function SkillCard({ skill }: { skill: any }) {
         </p>
 
         {/* Action Footer - Compact */}
-        <div className="mt-auto pt-3 border-t border-zinc-100 flex items-center justify-between gap-2">
+        <div className="mt-auto pt-3 border-t border-zinc-100 flex items-center justify-end gap-2">
             
-            {/* Install Command Button - Simplified */}
-            <button 
-                onClick={handleCopy}
-                className="flex-1 flex items-center gap-2 px-2.5 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-500 text-xs font-mono rounded-lg border border-zinc-200 transition-all hover:border-cyan-200 hover:text-cyan-700 relative z-20 group/btn"
-                title="Copy install command"
-            >
-                {copied ? <Check className="w-3 h-3 text-green-500" /> : <Terminal className="w-3 h-3 text-zinc-400 group-hover/btn:text-cyan-500" />}
-                <span className="truncate">{installCmd}</span>
-            </button>
+            <div className="flex items-center gap-1 text-xs font-medium text-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 duration-300">
+                View Details <ArrowUpRight className="w-3 h-3" />
+            </div>
 
-            {/* Detail Arrow */}
-            <div className="p-1.5 text-zinc-300 group-hover:text-cyan-500 transition-colors">
+            {/* Static Arrow for when not hovered, or just keep it clean */}
+             <div className="p-1.5 text-zinc-300 group-hover:hidden transition-colors">
                 <ArrowUpRight className="w-4 h-4" />
             </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
