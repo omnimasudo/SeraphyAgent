@@ -1,0 +1,26 @@
+{
+  "total_prompts": 1478,
+  "regular_prompts": 1478,
+  "skills": 40,
+  "categories": 11,
+  "tags": 14,
+  "contributors": 100,
+  "prompt_types": {
+    "TEXT": 1225,
+    "SKILL": 40,
+    "IMAGE": 22,
+    "VIDEO": 0,
+    "AUDIO": 0,
+    "STRUCTURED": 231
+  },
+  "files": {
+    "prompts.json": "1478 prompts with full metadata",
+    "skills.json": "40 agent skills",
+    "categories.json": "11 categories",
+    "tags.json": "14 tags",
+    "promptmasters.json": "Top 100 contributors",
+    "all_prompts.json": "Combined prompts for search"
+  },
+  "source": "https://github.com/f/prompts.chat",
+  "extracted_at": "2026-03-17"
+}

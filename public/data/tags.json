@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "name": "text",
+    "slug": "text",
+    "prompt_count": 1217
+  },
+  {
+    "id": 2,
+    "name": "ai",
+    "slug": "ai",
+    "prompt_count": 799
+  },
+  {
+    "id": 3,
+    "name": "roleplay",
+    "slug": "roleplay",
+    "prompt_count": 681
+  },
+  {
+    "id": 4,
+    "name": "analysis",
+    "slug": "analysis",
+    "prompt_count": 360
+  },
+  {
+    "id": 5,
+    "name": "creative",
+    "slug": "creative",
+    "prompt_count": 338
+  },
+  {
+    "id": 6,
+    "name": "structured",
+    "slug": "structured",
+    "prompt_count": 231
+  },
+  {
+    "id": 7,
+    "name": "coding",
+    "slug": "coding",
+    "prompt_count": 229
+  },
+  {
+    "id": 8,
+    "name": "writing",
+    "slug": "writing",
+    "prompt_count": 191
+  },
+  {
+    "id": 9,
+    "name": "productivity",
+    "slug": "productivity",
+    "prompt_count": 160
+  },
+  {
+    "id": 10,
+    "name": "communication",
+    "slug": "communication",
+    "prompt_count": 150
+  },
+  {
+    "id": 11,
+    "name": "education",
+    "slug": "education",
+    "prompt_count": 108
+  },
+  {
+    "id": 12,
+    "name": "business",
+    "slug": "business",
+    "prompt_count": 108
+  },
+  {
+    "id": 13,
+    "name": "developers",
+    "slug": "developers",
+    "prompt_count": 100
+  },
+  {
+    "id": 14,
+    "name": "image",
+    "slug": "image",
+    "prompt_count": 22
+  }
+]

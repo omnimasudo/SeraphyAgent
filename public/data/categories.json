@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "name": "General",
+    "slug": "general",
+    "icon": "grid",
+    "prompt_count": 499
+  },
+  {
+    "id": 2,
+    "name": "Development",
+    "slug": "development",
+    "icon": "code",
+    "prompt_count": 402
+  },
+  {
+    "id": 3,
+    "name": "Business",
+    "slug": "business",
+    "icon": "briefcase",
+    "prompt_count": 97
+  },
+  {
+    "id": 4,
+    "name": "Creative",
+    "slug": "creative",
+    "icon": "palette",
+    "prompt_count": 97
+  },
+  {
+    "id": 5,
+    "name": "Research & Analysis",
+    "slug": "research-analysis",
+    "icon": "search",
+    "prompt_count": 80
+  },
+  {
+    "id": 6,
+    "name": "Writing & Content",
+    "slug": "writing-content",
+    "icon": "edit-3",
+    "prompt_count": 76
+  },
+  {
+    "id": 7,
+    "name": "Entertainment",
+    "slug": "entertainment",
+    "icon": "film",
+    "prompt_count": 64
+  },
+  {
+    "id": 8,
+    "name": "Communication",
+    "slug": "communication",
+    "icon": "message-circle",
+    "prompt_count": 59
+  },
+  {
+    "id": 9,
+    "name": "Education",
+    "slug": "education",
+    "icon": "book-open",
+    "prompt_count": 59
+  },
+  {
+    "id": 10,
+    "name": "Lifestyle",
+    "slug": "lifestyle",
+    "icon": "coffee",
+    "prompt_count": 30
+  },
+  {
+    "id": 11,
+    "name": "Health & Wellness",
+    "slug": "health-wellness",
+    "icon": "heart",
+    "prompt_count": 15
+  }
+]
