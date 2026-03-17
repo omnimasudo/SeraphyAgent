@@ -7,7 +7,7 @@
       "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web.",
       "category": "Web & Frontend Development",
       "author": "seanphan",
-      "github_url": "https://github.com/Demerzels-lab/elsamultiskill/tree/main/public/skills/seanphan/artifacts-builder",
+      "github_url": "https://github.com/omnimasudo/SeraphyAgent/tree/main/public/skills/seanphan/artifacts-builder",
       "install_command": "npx clawhub@latest install artifacts-builder",
       "featured": false,
       "popular": true
@@ -19,7 +19,7 @@
       "description": "ALWAYS USES TMUX SESSION `claw`.",
       "category": "Web & Frontend Development",
       "author": "imaginelogo",
-      "github_url": "https://github.com/Demerzels-lab/elsamultiskill/tree/main/public/skills/imaginelogo/claw-shell",
+      "github_url": "https://github.com/omnimasudo/SeraphyAgent/tree/main/public/skills/imaginelogo/claw-shell",
       "install_command": "npx clawhub@latest install claw-shell",
       "featured": false,
       "popular": true
@@ -31,7 +31,7 @@
       "description": "Complete Zoho Mail integration with OAuth2, REST API (5-10x faster), HTML emails, attachments.",
       "category": "Web & Frontend Development",
       "author": "briansmith80",
-      "github_url": "https://github.com/Demerzels-lab/elsamultiskill/tree/main/public/skills/briansmith80/clawdbot-zoho-email",
+      "github_url": "https://github.com/omnimasudo/SeraphyAgent/tree/main/public/skills/briansmith80/clawdbot-zoho-email",
       "install_command": "npx clawhub@latest install clawdbot-zoho-email",
       "featured": false,
       "popular": true
@@ -43,7 +43,7 @@
       "description": "Integrates with local ComfyUI instance at <http://192.168.31.7:8000> to generate images from text (txt2img) and edit.",
       "category": "Web & Frontend Development",
       "author": "tullyhu",
-      "github_url": "https://github.com/Demerzels-lab/elsamultiskill/tree/main/public/skills/tullyhu/comfy-ai",
+      "github_url": "https://github.com/omnimasudo/SeraphyAgent/tree/main/public/skills/tullyhu/comfy-ai",
       "install_command": "npx clawhub@latest install comfy-ai",
       "featured": false,
       "popular": true

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Search, Trophy, Medal, Users, Loader2, Github, ExternalLink } from "lucide-react";
+import { Search, Trophy, Medal, Users, Loader2, Github, ExternalLink, Sparkles } from "lucide-react";
 
 interface Promptmaster {
   id?: string;
@@ -63,15 +63,22 @@ export default function PromptmastersPage() {
     <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 pt-24 pb-20">
       
       {/* Header Section */}
-      <section className="container mx-auto px-4 max-w-5xl mb-12 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-xs font-bold uppercase tracking-wider rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50">
-          <Trophy className="w-3.5 h-3.5" />
+      <section className="container mx-auto px-4 max-w-5xl mb-12 text-center relative z-10 pt-12">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 text-xs font-bold uppercase tracking-widest rounded-full bg-white/50 text-zinc-800 border border-zinc-200/80 shadow-sm backdrop-blur-md transition-colors">
+          <Sparkles className="w-3.5 h-3.5 text-cyan-600" />
           <span>Top Contributors</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6">
-          Meet the Promptmasters
+        
+        <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 text-zinc-900 leading-[1.05]">
+          Meet the <br className="hidden md:block"/>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-500">
+            Promptmasters
+          </span>
         </h1>
-        <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto mb-10">
+        
+        <p className="text-lg md:text-xl text-zinc-700 leading-relaxed max-w-3xl mx-auto mb-12 font-medium">
           The brilliant minds behind the most powerful AI prompts. Discover their work, follow their styles, and get inspired to create your own.
         </p>
 

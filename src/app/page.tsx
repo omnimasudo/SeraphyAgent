@@ -40,10 +40,10 @@ export default async function HomePage() {
   ];
 
   const sponsors = [
-    { name: "Warp", logo: "/warp.png" },
-    { name: "Sentry", logo: "/sentry.png" },
-    { name: "CommandCode", logo: "/commandCodeAI.png" },
-    { name: "Cognition", logo: "/Cognition_PrimaryLockup_Black.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg" },
+    { name: "Warp", logo: "/warp.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg" },
+    { name: "Sentry", logo: "/sentry.png", className: "scale-125 origin-center" },
+    { name: "CommandCode", logo: "/commandCodeAI.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg" },
+    { name: "Cognition", logo: "/Cognition_PrimaryLockup_Black.png", className: "bg-white/80 backdrop-blur-sm p-2 rounded-lg scale-125 origin-center" },
     { name: "CodeRabbit", logo: "/code-rabbit.png" },
   ];
 
