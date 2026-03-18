@@ -8,6 +8,7 @@
 
   <br />
 
+
   [![Status](https://img.shields.io/badge/Status-V1.0_BETA-cyan?style=for-the-badge&logo=rocket)]()
   [![Next.js](https://img.shields.io/badge/Next.js-16.1.7-black?style=for-the-badge&logo=next.js)]()
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.6+-blue?style=for-the-badge&logo=typescript)]()
@@ -16,7 +17,6 @@
   [![License](https://img.shields.io/badge/License-MIT-purple?style=for-the-badge)]()
 
   <br />
-
 
 </div>
 
