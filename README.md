@@ -17,7 +17,7 @@
 
   <br />
 
-  **[Live Demo](https://seraphy-agent.vercel.app)** • **[Documentation](https://docs.seraphy-agent.dev)** • **[Discord Community](https://discord.gg/seraphy)**
+
 </div>
 
 ---
