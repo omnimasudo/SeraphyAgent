@@ -523,15 +523,6 @@ pnpm build --analyze
 
 ---
 
-## Support & Community
-
-- **Email**: support@seraphy-agent.dev
-- **Discord**: [Join our community](https://discord.gg/seraphy)
-- **Documentation**: [docs.seraphy-agent.dev](https://docs.seraphy-agent.dev)
-- **Bug Reports**: [GitHub Issues](https://github.com/seraphy-agent/issues)
-- **Feature Requests**: [GitHub Discussions](https://github.com/seraphy-agent/discussions)
-
----
 
 ## License
 
@@ -554,7 +545,7 @@ copies or substantial portions of the Software.
 ---
 
 <div align="center">
-  <sub>SERAPHY AGENT © 2026 • Your Gateway to AI Mastery • Built with ❤️ and cutting-edge technology</sub>
+  <sub>SERAPHY AGENT © 2026 • Your Gateway to AI Mastery • Built with  and cutting-edge technology</sub>
 
   <br />
 
