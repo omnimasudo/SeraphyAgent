@@ -1,246 +1,214 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Search, Sparkles, SlidersHorizontal, Loader2, FileQuestion, ChevronLeft, ChevronRight } from "lucide-react";
-import PromptCard from "@/components/PromptCard";
+import { Search, Loader2, ChevronLeft, ChevronRight, Trophy, Medal, Award, FileQuestion, BarChart2 } from "lucide-react";
 import SeraphyChatWidget from "@/components/SeraphyChatWidget";
-import Image from "next/image";
+import Link from "next/link";
 
-// Interface disesuaikan dengan struktur JSON baru
-interface Prompt {
-  id: string | number;
-  title: string;
-  slug: string;
-  content: string;
-  type?: string;
-  for_devs?: boolean;
-  category?: string;
-  tags?: string[];
-  contributors?: string[];
-  word_count?: number;
-  char_count?: number;
-  description?: string;
-}
-
-interface Category {
-  id: string;
-  slug: string;
-  name: string;
+// Interface untuk Prompt Master
+interface PromptMaster {
+  rank: number;
+  username: string;
+  prompt_count: number;
+  prompt_ids: number[];
 }
 
 interface PromptmastersClientProps {
-  initialMasters: any[];
+  initialMasters: PromptMaster[];
 }
 
 export default function PromptmastersClient({ initialMasters }: PromptmastersClientProps) {
-  const [prompts, setPrompts] = useState<Prompt[]>(initialMasters);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [masters, setMasters] = useState<PromptMaster[]>(initialMasters);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Filters & Pagination States
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-
-  // Reset pagination ke halaman 1 setiap kali filter atau pencarian berubah
+  // Reset pagination ke halaman 1 setiap kali pencarian berubah
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery]);
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const categoriesRes = await fetch("/data/categories.json");
-        const categoriesData = categoriesRes.ok ? await categoriesRes.json() : [];
-        setCategories(categoriesData.length > 0 ? categoriesData : [
-          { id: "1", slug: "coding", name: "Coding" },
-          { id: "2", slug: "writing", name: "Writing" },
-          { id: "3", slug: "marketing", name: "Marketing" },
-          { id: "4", slug: "business", name: "Business" },
-          { id: "5", slug: "development", name: "Development" },
-        ]);
-      } catch (error) {
-        console.error("Failed to load categories:", error);
-        setCategories([
-          { id: "1", slug: "coding", name: "Coding" },
-          { id: "2", slug: "writing", name: "Writing" },
-          { id: "3", slug: "marketing", name: "Marketing" },
-          { id: "4", slug: "business", name: "Business" },
-          { id: "5", slug: "development", name: "Development" },
-        ]);
-      }
-    };
-    loadCategories();
-  }, []);
-
-  // Filter Logic (Sekarang mencakup Tags dan Contributors)
-  const filteredPrompts = useMemo(() => {
-    return prompts.filter((prompt) => {
+  // Filter Logic untuk Prompt Masters
+  const filteredMasters = useMemo(() => {
+    return masters.filter((master) => {
       const searchLower = searchQuery.toLowerCase();
-      const matchesSearch = 
-        prompt.title?.toLowerCase().includes(searchLower) ||
-        prompt.content?.toLowerCase().includes(searchLower) ||
-        prompt.tags?.some(tag => tag.toLowerCase().includes(searchLower)) ||
-        prompt.contributors?.some(c => c.toLowerCase().includes(searchLower));
-        
-      const matchesCategory = 
-        selectedCategory === "all" || prompt.category?.toLowerCase() === selectedCategory.toLowerCase();
-
-      return matchesSearch && matchesCategory;
+      return master.username?.toLowerCase().includes(searchLower);
     });
-  }, [prompts, searchQuery, selectedCategory]);
+  }, [masters, searchQuery]);
 
   // Pagination Logic
-  const totalPages = Math.ceil(filteredPrompts.length / itemsPerPage);
-  const currentPrompts = filteredPrompts.slice(
-    (currentPage - 1) * itemsPerPage, 
+  const totalPages = Math.ceil(filteredMasters.length / itemsPerPage);
+  const currentMasters = filteredMasters.slice(
+    (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  // Fungsi render Badge/Angka berdasarkan rank (Persis seperti referensi HTML)
+  const renderRank = (rank: number) => {
+    if (rank === 1) return <Trophy className="h-6 w-6 text-yellow-500" />;
+    if (rank === 2) return <Medal className="h-6 w-6 text-gray-400" />;
+    if (rank === 3) return <Award className="h-6 w-6 text-amber-600" />;
+    return <span className="w-6 h-6 flex items-center justify-center text-sm font-medium text-gray-500">{rank}</span>;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
+      </div>
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-zinc-50 text-zinc-900 pt-24 pb-20 relative">
+    <main className="min-h-screen bg-white text-gray-800 pb-20 font-sans selection:bg-blue-500/30">
       
-      <SeraphyChatWidget />
-
-      <section className="container mx-auto px-4 max-w-7xl mb-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 text-xs font-bold uppercase tracking-wider rounded-full bg-cyan-100 text-cyan-700 border border-cyan-200">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Prompt Directory</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-              Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">Prompts</span>
-            </h1>
-            <p className="text-lg text-zinc-600 leading-relaxed">
-              Explore our curated collection of high-quality prompts. Search by keyword, tag, or creator to find exactly what you need.
-            </p>
+      <div className="container py-8 max-w-3xl mx-auto px-4 mt-10">
+        
+        {/* =========================================
+            1. HEADER SECTION
+            ========================================= */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Trophy className="h-8 w-8 text-yellow-500" />
+            <h1 className="text-3xl font-bold text-black">Promptmasters</h1>
           </div>
+          <p className="text-gray-600 text-sm md:text-base">
+            Top contributors ranked by upvotes received on their prompts
+          </p>
+        </div>
 
-          <div className="relative w-full md:w-96 flex-shrink-0 group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-zinc-400 group-focus-within:text-blue-500 transition-colors" />
-            </div>
+        {/* =========================================
+            2. SEARCH & TABS UI
+            ========================================= */}
+        <div className="flex flex-col gap-4 mb-6">
+          {/* Search Input */}
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
               type="text"
-              placeholder="Search prompts, tags, or authors..."
+              placeholder="Search prompt masters..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-11 pr-4 py-3.5 bg-white border border-zinc-200 rounded-2xl text-sm shadow-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              className="w-full pl-9 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent text-sm font-medium placeholder-gray-500 transition-all"
             />
           </div>
-        </div>
 
-        {/* Category Filters */}
-        <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className="flex items-center gap-2 text-sm font-semibold text-zinc-500 mr-2 flex-shrink-0">
-            <SlidersHorizontal className="w-4 h-4" /> Filters:
-          </div>
-          <button
-            onClick={() => setSelectedCategory("all")}
-            className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              selectedCategory === "all"
-                ? "bg-zinc-900 text-white shadow-md"
-                : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
-            }`}
-          >
-            All Prompts
-          </button>
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.slug)}
-              className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all capitalize ${
-                selectedCategory === category.slug
-                  ? "bg-zinc-900 text-white shadow-md"
-                  : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
-              }`}
-            >
-              {category.name}
+          {/* Toolbar */}
+          <div className="flex items-center justify-end">
+            {/* Action Button Icon (Chart) */}
+            <button className="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 hover:text-black size-9 shrink-0 transition-colors">
+              <BarChart2 className="h-4 w-4" />
             </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="container mx-auto px-4 max-w-7xl">
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-32 text-zinc-400">
-            <Loader2 className="w-10 h-10 animate-spin mb-4 text-blue-500" />
-            <p className="font-medium animate-pulse">Loading amazing prompts...</p>
           </div>
-        ) : filteredPrompts.length > 0 ? (
-          <>
-            {/* Grid Layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-              {currentPrompts.map((prompt) => (
-                <PromptCard key={prompt.id} prompt={prompt} />
-              ))}
-            </div>
+        </div>
 
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-8">
-                <button
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="p-2.5 rounded-xl bg-white border border-zinc-200 text-zinc-500 hover:border-cyan-200 hover:text-cyan-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                
-                <div className="flex items-center gap-1 px-4">
-                  {Array.from({ length: totalPages }).map((_, idx) => {
-                    const pageNum = idx + 1;
-                    if (totalPages > 5 && Math.abs(currentPage - pageNum) > 1 && pageNum !== 1 && pageNum !== totalPages) {
-                      if (Math.abs(currentPage - pageNum) === 2) return <span key={idx} className="text-zinc-400 px-1">...</span>;
-                      return null;
-                    }
-                    return (
-                      <button
-                        key={idx}
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${
-                          currentPage === pageNum 
-                            ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25 scale-105" 
-                            : "text-zinc-500 hover:bg-cyan-50 hover:text-cyan-600"
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                  className="p-2.5 rounded-xl bg-white border border-zinc-200 text-zinc-500 hover:border-cyan-200 hover:text-cyan-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-            )}
-          </>
+        {/* =========================================
+            3. MASTERS LIST
+            ========================================= */}
+        {currentMasters.length === 0 ? (
+          <div className="text-center py-16 border-t border-gray-300">
+            <FileQuestion className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-700 mb-1">No prompt masters found</h3>
+            <p className="text-sm text-gray-500">Try adjusting your search terms</p>
+          </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-white border border-zinc-200 rounded-3xl shadow-sm">
-            <div className="w-20 h-20 mb-6 bg-zinc-100 rounded-full flex items-center justify-center">
-              <FileQuestion className="w-10 h-10 text-zinc-400" />
-            </div>
-            <h3 className="text-2xl font-bold mb-2">No prompts found</h3>
-            <p className="text-zinc-500 max-w-md mx-auto mb-8">
-              We couldn't find any prompts matching "{searchQuery}".
-            </p>
-            <button 
-              onClick={() => { setSearchQuery(""); setSelectedCategory("all"); }}
-              className="px-6 py-3 bg-zinc-900 text-white font-semibold rounded-xl transition-all shadow-sm"
+          <div className="divide-y divide-gray-200 border-t border-b border-gray-200">
+            {currentMasters.map((master) => {
+              // Extract inisial untuk fallback avatar (2 huruf pertama)
+              const initials = master.username.substring(0, 2).toUpperCase();
+
+              return (
+                <Link
+                  key={master.username}
+                  href={`/promptmasters/${master.username}`}
+                  className="flex items-center gap-4 p-3 hover:bg-gray-50 transition-colors group"
+                >
+                  {/* Rank Icon / Number */}
+                  <div className="w-8 flex justify-center">
+                    {renderRank(master.rank)}
+                  </div>
+
+                  {/* Avatar (Menggunakan inisial krn tdk ada foto di data) */}
+                  <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-200 items-center justify-center border border-gray-300 group-hover:border-gray-400 transition-colors">
+                    <span className="text-xs font-semibold text-gray-700">{initials}</span>
+                  </span>
+
+                  {/* Username & Handle */}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate text-gray-800 group-hover:text-black transition-colors">
+                      {master.username}
+                    </p>
+                    <p className="text-sm text-gray-500">@{master.username.toLowerCase().replace(/\s+/g, '')}</p>
+                  </div>
+
+                  {/* Stats (Prompts & Upvotes) */}
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="text-center min-w-[3rem]">
+                      <p className="font-semibold text-gray-800">{master.prompt_count}</p>
+                      <p className="text-[11px] text-gray-500">prompts</p>
+                    </div>
+                    <div className="text-center min-w-[3rem]">
+                      {/* Asumsi dummy upvotes karena tidak ada di interface asli, saya kalikan sbg contoh */}
+                      <p className="font-semibold text-blue-500">{master.prompt_count * 3}</p>
+                      <p className="text-[11px] text-gray-500">upvotes</p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        {/* =========================================
+            4. PAGINATION
+            ========================================= */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            <button
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="flex items-center justify-center size-9 rounded-md border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Clear all filters
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                if (pageNum > totalPages) return null;
+
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`size-9 rounded-md text-sm font-medium transition-colors ${
+                      currentPage === pageNum
+                        ? "bg-blue-500 text-white"
+                        : "bg-white text-gray-600 border border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="flex items-center justify-center size-9 rounded-md border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         )}
-      </section>
+      </div>
+
+      {/* Seraphy Chat Widget */}
+      <SeraphyChatWidget />
     </main>
   );
 }
