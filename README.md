@@ -15,7 +15,6 @@
   [![Tailwind](https://img.shields.io/badge/Tailwind-4.0+-38B2AC?style=for-the-badge&logo=tailwind-css)]()
   [![OpenRouter](https://img.shields.io/badge/OpenRouter-GPT--4o--mini-orange?style=for-the-badge&logo=openai)]()
   [![License](https://img.shields.io/badge/License-MIT-purple?style=for-the-badge)]()
-
   <br />
 
 </div>
