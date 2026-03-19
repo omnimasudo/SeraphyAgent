@@ -1,3 +1,5 @@
+CA: 78owE8ot2B4xXSRHmz9B5rYGiZbVYjjLqgwoGTWHpump
+
 # SERAPHY AGENT // DIRECTORY
 
 > **Next-Gen AI Prompt Library & Skill Marketplace**
